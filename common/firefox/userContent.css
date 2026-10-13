@@ -6,7 +6,7 @@
     scrollbar-width: none !important;
   }
   body {
-    background-image: url("https://nytril-ark.github.io/blank.png") !important;
+    background-image: url("https://hexonide.github.io/blank.png") !important;
     background-size: cover !important;
   }
 
@@ -23,8 +23,8 @@
     right: -2px !important;
     width: 200px !important;
     height: 200px !important;
-    /* background-image: url("https://nytril-ark.github.io/catsit2.svg") !important; */
-    background-image: url("https://nytril-ark.github.io/sleep.png") !important;
+    /* background-image: url("https://hexonide.github.io/catsit2.svg") !important; */
+    background-image: url("https://hexonide.github.io/sleep.png") !important;
     background-size: contain !important;
     background-repeat: no-repeat !important;
     transform: scaleX(-1);
@@ -49,7 +49,7 @@
   }
 
   content-search-handoff-ui {
-    --newtab-search-icon: url("https://nytril-ark.github.io/rumda.svg") !important;
+    --newtab-search-icon: url("https://hexonide.github.io/rumda.svg") !important;
     --size-item-medium: 50px !important;
   }
 
