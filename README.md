@@ -72,7 +72,7 @@
 >
 
 ```bash
-cd ~/.config && git clone --depth=1 https://github.com/Nytril-ark/rumda && cd rumda && chmod +x install.sh && ./install.sh
+cd ~/.config && git clone --depth=1 https://github.com/hexonide/rumda && cd rumda && chmod +x install.sh && ./install.sh
 ```
 and you'll be done!
 
