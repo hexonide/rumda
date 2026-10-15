@@ -106,12 +106,12 @@ Lastly, if you want to, I would _recommend_ installing nvchad.
 
 
 ```bash
-cd ~/.config && git clone https://github.com/Nytril-ark/rumda && cd rumda && chmod +x install.sh && ./install.sh
+cd ~/.config && git clone https://github.com/hexonide/rumda && cd rumda && chmod +x install.sh && ./install.sh
 ```
 separated commands for readability:
 ```bash
 cd ~/.config 
-git clone https://github.com/Nytril-ark/rumda 
+git clone https://github.com/hexonide/rumda 
 cd rumda 
 chmod +x install.sh
 ./install.sh
