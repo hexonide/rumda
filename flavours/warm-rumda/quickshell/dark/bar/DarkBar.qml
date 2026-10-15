@@ -23,7 +23,10 @@ Scope {
   property var shellRoot
   property int margint: Config.barMarginTop
   property int marginb: Config.barMarginBottom
+
   Dashboard {}
+  Notifications {}
+
   signal barLoaded
   function initialiseBar() {
     barRectangle.anchors.topMargin = barScope.margint;
@@ -67,8 +70,8 @@ Scope {
       anchors.fill: parent
       onWheel: wheel => {
         Hyprland.dispatch("workspace 1");
-      // Mpris.players.values.forEach((player, idx) => player.pause())
-      // this ^ pauses on wspace switch, which i dont like
+        // Mpris.players.values.forEach((player, idx) => player.pause())
+        // this ^ pauses on wspace switch, which i dont like
       }
     }
 
