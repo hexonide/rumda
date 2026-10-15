@@ -96,11 +96,20 @@ Singleton {
   readonly property int notifMaxVisible: 5
   readonly property string notifFont: "Terminess Nerd Font"
 
+  // popout volume
   readonly property int popoutVolShadowOffsetX: 4
   readonly property int popoutVolShadowOffsetY: 4
 
-
-
+  // spotlight/zoom
+  property real zoomHoleRadius: 150
+  property real zoomMinRadius: 30
+  property real zoomMaxRadius: 600
+  property real zoomRadiusStep: 20
+  property real zoomDarkness: 0.8
+  property real zoomFeather: 0.2
+  property real zoomMin: 1.0
+  property real zoomMax: 8.0
+  property real zoomStep: 0.4
 
   // ============================================
 
