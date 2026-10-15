@@ -49,17 +49,15 @@ ShellRoot {
       barLoaded();
     }
 
-
     Connections {
       target: barLoader.item
       function onBarSignalTheme() {
-        Qt.callLater(() => {
+        Qt.callLater(
         // root.themeChangedAnimateCat()
-        });
+        () => {});
         delayTimer.start();
       }
     }
-
 
     Timer {
       id: delayTimer

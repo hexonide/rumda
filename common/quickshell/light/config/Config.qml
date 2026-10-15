@@ -21,6 +21,7 @@ Singleton {
   readonly property int barMarginRight: 1
   readonly property int barWidth: 48
   readonly property int barRadius: 4
+  readonly property int innerBModulesRadius: 7
   readonly property int barBorderWidth: 2
   readonly property int barsGrave: 1400    // where the bar goes in terms of y position when it's animated out on a themeswitch (it then gets killed)
   // increasing it will increase animation speed. also, it kinda depends on ur screenheight
@@ -56,6 +57,44 @@ Singleton {
   readonly property bool enableDashShadow: true
   readonly property int dashShadowOffsetX: 3
   readonly property int dashShadowOffsetY: 3
+
+  // notifications
+  readonly property int notifImageMaxHeight: 60
+  readonly property int notifShotHeight: 100
+  readonly property bool notifDynamicWidth: false
+  readonly property int notifMinWidth: 220
+  readonly property int notifWidth: 360
+  readonly property int notifTimeout: 10000
+  readonly property int notifIconSize: 56
+  readonly property int notifButtonHeight: 22
+  readonly property int notifSlideDuration: 250
+  readonly property int notifBarHeight: 3
+  readonly property int notifBarTopMargin: 8
+  readonly property int notifShadowOffsetX: 9
+  readonly property int notifShadowOffsetY: 8
+  readonly property int notifRadius: 0
+  readonly property int notifBorderWidth: 1
+  readonly property int notifMarginTop: 20
+  readonly property int notifMarginRight: 15
+  readonly property int notifSpacing: 10
+  readonly property int notifPadding: 12
+  readonly property int notifMaxVisible: 5
+  readonly property string notifFont: "Terminess Nerd Font"
+
+  // popout volume
+  readonly property int popoutVolShadowOffsetX: 0
+  readonly property int popoutVolShadowOffsetY: 0
+
+  // spotlight/zoom
+  property real zoomHoleRadius: 150
+  property real zoomMinRadius: 30
+  property real zoomMaxRadius: 600
+  property real zoomRadiusStep: 20
+  property real zoomDarkness: 0.8
+  property real zoomFeather: 0.2
+  property real zoomMin: 1.0
+  property real zoomMax: 8.0
+  property real zoomStep: 0.4
 
   // ============================================
 

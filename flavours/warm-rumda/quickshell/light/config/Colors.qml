@@ -27,4 +27,6 @@ Singleton {
   property color powerButtons: "#F5DCC6"  // bg color of the buttons (used in all buttons for consistency)
   //========================================
   property color dashAccentColor: "#f2bc88" // ignore this
+
+  property color zoomTint: "#000000"
 }

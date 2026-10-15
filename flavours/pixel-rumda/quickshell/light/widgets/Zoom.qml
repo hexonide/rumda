@@ -64,7 +64,7 @@ Scope {
         renderTarget: Canvas.FramebufferObject
 
         property real darkness: Config.zoomDarkness
-        property color tint: Config.zoomTint
+        property color tint: Colors.zoomTint
         property real feather: Config.zoomFeather
 
         onDarknessChanged: requestPaint()
@@ -82,8 +82,7 @@ Scope {
           ctx.fillRect(0, 0, width, height);
 
           ctx.globalCompositeOperation = "destination-out";
-          var g = ctx.createRadialGradient(root.cursorX, root.cursorY, 0, root.cursorX, root.cursorY,
-                                           root.holeRadius);
+          var g = ctx.createRadialGradient(root.cursorX, root.cursorY, 0, root.cursorX, root.cursorY, root.holeRadius);
 
           g.addColorStop(0, "rgba(0, 0, 0, 1)");
           for (var i = 0; i <= steps; i++) {
@@ -110,8 +109,7 @@ Scope {
         onWheel: wheel => {
           var steps = wheel.angleDelta.y / 120;
           if (wheel.modifiers & Qt.ControlModifier) {
-            root.holeRadius = Math.max(Config.zoomMinRadius, Math.min(Config.zoomMaxRadius, root.holeRadius + steps
-                                                                      * Config.zoomRadiusStep));
+            root.holeRadius = Math.max(Config.zoomMinRadius, Math.min(Config.zoomMaxRadius, root.holeRadius + steps * Config.zoomRadiusStep));
             canvas.requestPaint();
           } else {
             root.setZoom(root.zoomLevel + steps * Config.zoomStep);

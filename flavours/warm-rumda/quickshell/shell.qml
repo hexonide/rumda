@@ -34,6 +34,10 @@ ShellRoot {
     shellRoot: root
   }
 
+  Zoom {
+    id: zoom
+  }
+
   Loader {
     id: barLoader
     readonly property Component lightBar: Qt.createComponent("light/bar/LightBar.qml")

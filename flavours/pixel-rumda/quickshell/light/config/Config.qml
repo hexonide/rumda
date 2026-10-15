@@ -22,7 +22,7 @@ Singleton {
   readonly property int barMarginRight: 1
   readonly property int barWidth: 48
   readonly property int barRadius: 0
-  readonly property int innerBModulesRadius: 3
+  readonly property int innerBModulesRadius: 2
   readonly property int barBorderWidth: 1
   readonly property int innerBMSoffsetX: 32
   readonly property int innerBMSoffsetY: 2
@@ -71,7 +71,6 @@ Singleton {
   readonly property int dashShadowOffsetY: 3
 
   readonly property int contribMaxCols: 30
-
 
   // notifications
   readonly property int notifImageMaxHeight: 60
