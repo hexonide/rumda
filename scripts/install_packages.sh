@@ -35,6 +35,8 @@ PACKAGES=(
     swappy
     wl-clipboard
     wl-clip-persist
+    wf-recorder
+    mpv
     cliphist
     firefox
     thunar
