@@ -90,7 +90,7 @@ and you'll be done!
 
 
 ```
-hyprland quickshell rofi alacritty awww thunar neofetch swappy grim zathura yazi jetbrains-mono-fonts mako hyprpicker neovim \
+hyprland quickshell rofi alacritty awww thunar neofetch swappy grim zathura yazi jetbrains-mono-fonts hyprpicker neovim \
 ghostty  nautilus  btop bpytop obs-studio slurp xdg-desktop-portal-hyprland wl-clipboard git\
  jq lz4-devel lua python3 brightnessctl playerctl wpctl pipewire wireplumber
 ```

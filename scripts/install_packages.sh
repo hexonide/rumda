@@ -19,7 +19,6 @@ PACKAGES=(
     quickshell
     qt5-qtgraphicaleffects
     qt6-qt5compat
-    mako
     rofi
     alacritty
     zathura
@@ -153,7 +152,6 @@ fi
 # # # google-noto-sans-arabic-fonts                8.3 MB
 # # # zathura-pdf-mupdf                            0.0 MB
 # # # hyprlock                                     1.0 MB
-# # # mako                                         0.1 MB
 # # # tesseract                                    0.1 MB
 # # # Thunar                                      10.7 MB
 # # # qt5ct                                        0.9 MB

@@ -29,7 +29,6 @@ if [[ ! -f "$TINKERER_FLAG" ]]; then
     backup_config "$HOME/.config/alacritty/alacritty.toml" "Alacritty"
     backup_config "$HOME/.config/yazi/theme.toml" "Yazi"
     backup_config "$HOME/.config/zathura/zathurarc" "Zathura"
-    backup_config "$HOME/.config/mako/config" "Mako"
     backup_config "$HOME/.config/hypr/hyprlock.conf" "Hyprlock"
     
     echo "Backups created successfully!"
@@ -91,7 +90,6 @@ ln -fs "$SRC" "$COMMON_FILE"
 /home/$USER/.config/rumda/scripts/alacrittytheme.sh "$THEME"
 /home/$USER/.config/rumda/scripts/yazitheme.sh "$THEME"
 /home/$USER/.config/rumda/scripts/zathuratheme.sh "$THEME"
-/home/$USER/.config/rumda/scripts/makotheme.sh "$THEME"
 /home/$USER/.config/rumda/scripts/locktheme.sh "$THEME"
 
 notify-send "Rumda:" "switched to '$THEME' theme" &
