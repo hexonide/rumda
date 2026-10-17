@@ -16,10 +16,10 @@
 >
 > Built over the goat'ed Amadeus: https://github.com/xfcasio/amadeus
 >
-> if you would like to try it
+> wanna try Rumda?
 > see [installation](#installation-fedora).
 >
-> **for config and some issues**, [check this](#config)
+> **for advanced config and some issues**, [check this](#config)
 > 
 > you can also check: [Gallery](#gallery)  -  [Keybinds](#keybinds) - [Misc](#misc)
 >
