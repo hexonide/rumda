@@ -20,6 +20,7 @@
 > 
 > you can also check: [Gallery](#gallery)  -  [Keybinds](#keybinds) - [Misc](#misc)
 >
+>  Built over the goat'ed Amadeus: https://github.com/xfcasio/amadeus
 >
 > Note: I use Fedora. The rice could work on other distros fine, but parts of it will not be up-to-date with their package versions. You can try to contact me for help in that case.
 

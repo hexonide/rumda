@@ -23,13 +23,44 @@ require("lazy").setup({
   {
     "IogaMaster/neocord",
     event = "VeryLazy",
-    config = {
-      main_image = "language",
-      show_time = true,
-      workspace_text = function()
-        return "using NvChad"
-      end,
-    },
+    opts = function()
+      local cache = {}
+
+      local function project()
+        local dir = vim.fn.expand "%:p:h"
+        if dir == "" then
+          dir = vim.fn.getcwd()
+        end
+        if cache[dir] == nil then
+          local out = vim.fn.systemlist { "git", "-C", dir, "rev-parse", "--show-toplevel" }
+          if vim.v.shell_error == 0 and out[1] then
+            cache[dir] = vim.fn.fnamemodify(out[1], ":t")
+          else
+            cache[dir] = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+          end
+        end
+        return "Working on " .. cache[dir]
+      end
+
+      local function file_info()
+        return "Editing " .. vim.fn.expand "%:t" .. " in " .. vim.fn.expand "%:p:h:t"
+      end
+
+      return {
+        logo = "auto",
+        logo_tooltip = "Neovim",
+        main_image = "language",
+        show_time = true,
+        global_timer = true,
+        debounce_timeout = 10,
+        blacklist = { "NvimTree", "dashboard" },
+        editing_text = file_info,
+        reading_text = file_info,
+        terminal_text = file_info,
+        line_number_text = "Line %s out of %s",
+        workspace_text = project,
+      }
+    end,
   },
   {
     "nvim-treesitter/nvim-treesitter",
@@ -42,62 +73,65 @@ require("lazy").setup({
 }, lazy_config)
 
 -- Keymaps
-vim.api.nvim_set_keymap('n', '<M-h>', ':vsplit | terminal<CR> | resize 50%<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-h>", ":vsplit | terminal<CR> | resize 50%<CR>", { noremap = true, silent = true })
 
 -- Define the macro for the double loop
-vim.cmd([[
+vim.cmd [[
     let @a = 'i  for (int i = 0; i < 10; i++) {for (int k = 0; k < 10; k++) {}}'
-]])
-vim.api.nvim_set_keymap('n', '<leader>l', '@a', { noremap = true, silent = true })
+]]
+vim.api.nvim_set_keymap("n", "<leader>l", "@a", { noremap = true, silent = true })
 -- Markdown formatting keymaps (accessed via <Leader>w)
-vim.keymap.set('v', '<Leader>wb', 'c**<C-r>"**<Esc>', { desc = 'Bold selection' })
-vim.keymap.set('v', '<Leader>wi', 'c*<C-r>"*<Esc>', { desc = 'Italic selection' })
-vim.keymap.set('v', '<Leader>wu', 'c_<C-r>"_<Esc>', { desc = 'Underline/emphasis selection' })
-vim.keymap.set('v', '<Leader>wl', 'c[<C-r>"]()<Esc>i', { desc = 'Create link (add URL)' })
-vim.keymap.set('v', '<Leader>ws', 'c~~<C-r>"~~<Esc>', { desc = 'Strikethrough' })
+vim.keymap.set("v", "<Leader>wb", 'c**<C-r>"**<Esc>', { desc = "Bold selection" })
+vim.keymap.set("v", "<Leader>wi", 'c*<C-r>"*<Esc>', { desc = "Italic selection" })
+vim.keymap.set("v", "<Leader>wu", 'c_<C-r>"_<Esc>', { desc = "Underline/emphasis selection" })
+vim.keymap.set("v", "<Leader>wl", 'c[<C-r>"]()<Esc>i', { desc = "Create link (add URL)" })
+vim.keymap.set("v", "<Leader>ws", 'c~<C-r>"~<Esc>', { desc = "Strikethrough" })
 
 -- Text wrappers (accessed via <Leader>w)
-vim.keymap.set('v', '<Leader>w[', 'c_[<C-r>"]_<Esc>', { desc = 'Wrap in _[text]_' })
-vim.keymap.set('v', '<Leader>w(', 'c(<C-r>")<Esc>', { desc = 'Wrap in (text)' })
-vim.keymap.set('v', '<Leader>w{', 'c{<C-r>"}<Esc>', { desc = 'Wrap in {text}' })
-vim.keymap.set('v', '<Leader>w]', 'c[<C-r>"]<Esc>', { desc = 'Wrap in [text]' })
-vim.keymap.set('v', '<Leader>w"', 'c"<C-r>""<Esc>', { desc = 'Wrap in "text"' })
-vim.keymap.set('v', "<Leader>w'", "c'<C-r>\"'<Esc>", { desc = "Wrap in 'text'" })
-vim.keymap.set('v', '<Leader>w<', 'c<<C-r>"><Esc>', { desc = 'Wrap in <text>' })
-vim.keymap.set('v', '<Leader>w`', 'c`<C-r>"`<Esc>', { desc = 'Wrap in `text`' })
+vim.keymap.set("v", "<Leader>w[", 'c_[<C-r>"]_<Esc>', { desc = "Wrap in _[text]_" })
+vim.keymap.set("v", "<Leader>w(", 'c(<C-r>")<Esc>', { desc = "Wrap in (text)" })
+vim.keymap.set("v", "<Leader>w{", 'c{<C-r>"}<Esc>', { desc = "Wrap in {text}" })
+vim.keymap.set("v", "<Leader>w]", 'c[<C-r>"]<Esc>', { desc = "Wrap in [text]" })
+vim.keymap.set("v", '<Leader>w"', 'c"<C-r>""<Esc>', { desc = 'Wrap in "text"' })
+vim.keymap.set("v", "<Leader>w'", "c'<C-r>\"'<Esc>", { desc = "Wrap in 'text'" })
+vim.keymap.set("v", "<Leader>w<", 'c<<C-r>"><Esc>', { desc = "Wrap in <text>" })
+vim.keymap.set("v", "<Leader>w`", 'c`<C-r>"`<Esc>', { desc = "Wrap in `text`" })
 
 -- Code block
-vim.keymap.set('n', '<Leader>wcb', 'i```<CR>```<Esc>O', { desc = 'Code block' })
+vim.keymap.set("n", "<Leader>wcb", "i```<CR>```<Esc>O", { desc = "Code block" })
 
--- Subscript and superscript 
-vim.keymap.set('v', '<Leader>wS', 'c<sup><C-r>"</sup><Esc>', { desc = 'Superscript (wrap in <sup>)' })
-vim.keymap.set('v', '<Leader>wd', 'c<sub><C-r>"</sub><Esc>', { desc = 'Subscript (wrap in <sub>)' })
+-- Subscript and superscript
+vim.keymap.set("v", "<Leader>wS", 'c<sup><C-r>"</sup><Esc>', { desc = "Superscript (wrap in <sup>)" })
+vim.keymap.set("v", "<Leader>wd", 'c<sub><C-r>"</sub><Esc>', { desc = "Subscript (wrap in <sub>)" })
 
 -- Collapsible details block (selection becomes hidden)
-vim.keymap.set('v', '<Leader>wD', 'c<details><CR><summary>collapsible</summary><CR><C-r>"<CR></details><Esc>', { desc = 'Wrap in <details> (selection is collapsed)' })
+vim.keymap.set(
+  "v",
+  "<Leader>wD",
+  'c<details><CR><summary>collapsible</summary><CR><C-r>"<CR></details><Esc>',
+  { desc = "Wrap in <details> (selection is collapsed)" }
+)
 
--- CURSOR AND SCROLLING STUFF 
-vim.keymap.set('n', '<leader>tn', ':set relativenumber!<CR>', { desc = 'Toggle relative numbers on lines' })
-vim.opt.number = true         -- Show absolute line number on current line
+-- CURSOR AND SCROLLING STUFF
+vim.keymap.set("n", "<leader>tn", ":set relativenumber!<CR>", { desc = "Toggle relative numbers on lines" })
+vim.opt.number = true -- Show absolute line number on current line
 vim.opt.relativenumber = false -- show relative nums for other lines
-vim.opt.scrolloff = 999
-
-
+vim.opt.scrolloff = 4
 
 -- error-only config so the lsp doesnt clutter the view
 local error_only_config = {
   severity_sort = true,
   signs = {
-    severity = { min = vim.diagnostic.severity.ERROR }
+    severity = { min = vim.diagnostic.severity.ERROR },
   },
   virtual_text = {
-    severity = { min = vim.diagnostic.severity.ERROR }
+    severity = { min = vim.diagnostic.severity.ERROR },
   },
   float = {
-    severity = { min = vim.diagnostic.severity.ERROR }
+    severity = { min = vim.diagnostic.severity.ERROR },
   },
   underline = {
-    severity = { min = vim.diagnostic.severity.ERROR }
+    severity = { min = vim.diagnostic.severity.ERROR },
   },
 }
 
@@ -106,26 +140,25 @@ vim.diagnostic.config(error_only_config)
 
 -- Toggle diagnostics visibility (toggle lsp in normal mode through leader + t + d)
 local diagnostics_visible = true
-vim.keymap.set('n', '<Leader>td', function()
+vim.keymap.set("n", "<Leader>td", function()
   diagnostics_visible = not diagnostics_visible
-  
+
   if diagnostics_visible then
     -- Restore error-only config
     vim.diagnostic.config(error_only_config)
   else
     -- Hide all diagnostics
-    vim.diagnostic.config({
+    vim.diagnostic.config {
       virtual_text = false,
       signs = false,
       underline = false,
-    })
+    }
   end
-  
-  print('Diagnostics ' .. (diagnostics_visible and 'visible' or 'hidden'))
-end, { desc = 'Toggle diagnostics visibility' })
+
+  print("Diagnostics " .. (diagnostics_visible and "visible" or "hidden"))
+end, { desc = "Toggle diagnostics visibility" })
 
 vim.g.mkdp_browser = "firefox"
-
 
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
