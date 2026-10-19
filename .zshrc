@@ -212,6 +212,9 @@ fi
 ## alias s='sleep 3 && grim "$HOME/Pictures/Screenshots/$(date +%Y%m%d-%H%M%S).png"'
 #
 # alias s='nohup sh -c "sleep 3 && grim \"$HOME/Pictures/Screenshots/\$(date +%Y%m%d-%H%M%S).png\"" >/dev/null 2>&1 &'
+imgconcat() {
+    ffmpeg -i "$1" -i "$2" -filter_complex "[0:v][1:v]vstack=inputs=2" -frames:v 1 "output_$(date +%Y%m%d_%H%M%S).png"
+}
 
 alias run='./a.out'
 alias runh='cd && ./a.out'
@@ -251,6 +254,10 @@ alias mkc-devel='/home/hexogen/d-velopment/makc/tests/mkc'
 alias mkc-debug='/home/hexogen/d-velopment/makc/tests/mkc-asan'
 alias grp-extensions='~/d-velopment/scripts/group_extensions.sh'
 alias grp-pdfs='~/d-velopment/scripts/grp_pdfs.sh'
+alias termdown='termdown -f roman'
+alias auralis='~/.config/auralis_walls/scripts/auralis.sh'
+alias phonecam='scrcpy --video-source=camera --camera-id=0 --camera-size=1920x1080 --camera-fps=30 --v4l2-sink=/dev/video10 --no-video-playback --audio-source=mic-camcorder'
+
 
 
 BRACK_HEX="%F{#53595f}"
@@ -271,7 +278,9 @@ zstyle ':vcs_info:git:*' actionformats "$BRACK_HEX($USER_HEX%b$BRACK_HEX|$CWD_HE
 ## PS1="%B%K{#789978}%F{#12171d} toji %K{#2f343f}%F{#789978} %~ %f%k%b "
 ########### PS1="[%{${fg_bold[magenta]}%}$USER%{${fg_bold[cyan]}%}@${fg[green]}$HOST %{${fg[red]}%}%3~%(0?..%{ ${fg[red]}%}%?)%{${fg[blue]}%} %{${reset_color}%}] "
 #
-#
+
+
+############################################ Main rumda terminal prompt colors
 # custom 24-bit colors
 C_MAGENTA=$'%{\e[1;38;2;186;199;221m%}'   # #BAC7DD
 C_GREEN=$'%{\e[1;38;2;45;104;128m%}'     # #2D6880
@@ -287,14 +296,31 @@ C_AT=$'%{\e[1;38;2;173;112;74m%}'       # #AD704A (@ symbol color)
 RESET=$'%{\e[0m%}'
 
 # Updated PS1
-PS1="[$C_USER$USER$C_AT@$C_HOST$HOST $C_ERR%3~%(0?..$C_ERR%?)%{${fg[blue]}%} $RESET]"
+# PS1="[$C_USER$USER$C_AT@$C_HOST$HOST $C_ERR%3~%(0?..$C_ERR %?)%{${fg[blue]}%} $RESET]"
+PS1="[$C_USER$USER$C_AT@$C_HOST$HOST $C_ERR%3~%{${fg[blue]}%} $RESET]"
+
+
+########################################## old prompt colors
+# C_USER=$'%{\e[1;38;2;186;199;221m%}'     # #BAC7DD
+# C_HOST=$'%{\e[1;38;2;45;104;128m%}'      # #2D6880
+# C_AT=$'%{\e[1;38;2;196;154;85m%}'        # #C49A55
+# C_BRACKET=$'%{\e[1;38;2;196;154;85m%}'   # #C49A55
+# C_ERR=$'%{\e[1;38;2;154;66;53m%}'       # #9A4235
+# RESET=$'%{\e[0m%}'
+#
+# PS1="${C_BRACKET}[${C_USER}${USER}${C_AT}@${C_HOST}${HOST}${C_BRACKET} %3~%(0?..${C_ERR}%?)${RESET}${C_BRACKET}]${RESET}"
+#
+
+
+
+
 
 ####################################################
 #
 ## PS1="$BRACK_HEX""[$USER_HEX$USERNAME$AT_HEX@$HOST_HEX$HOST $CWD_HEX%~$BRACK_HEX]$GIT_HEX"'${vcs_info_msg_0_}'"$UID_HEX%(!.#.$)%f%k%b "
 
 export PATH="$HOME/.cargo/bin/:$HOME/.local/bin/:$PATH"
-export RUSTC_WRAPPER=sccache
+# export RUSTC_WRAPPER=sccache
 
 # . "$HOME/.local/bin/env"
 
