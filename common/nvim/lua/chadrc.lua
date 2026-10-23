@@ -1,17 +1,17 @@
--- This file needs to have same structure as nvconfig.lua 
+-- This file needs to have same structure as nvconfig.lua
 -- https://github.com/NvChad/ui/blob/v3.0/lua/nvconfig.lua
--- Please read that file to know all available options :( 
+-- Please read that file to know all available options :(
 
 ---@type ChadrcConfig
 local M = {}
 
 M.base46 = {
-	theme = "rumda-light",
-  theme_toggle = {"rumda-light", "rumda-light"},
-	-- hl_override = {
-	-- 	Comment = { italic = true },
-	-- 	["@comment"] = { italic = true },
-	-- },
+  theme = "rumda-light",
+  theme_toggle = { "rumda-light", "rumda-light" },
+  -- hl_override = {
+  -- 	Comment = { italic = true },
+  -- 	["@comment"] = { italic = true },
+  -- },
 }
 
 -- M.ui = {
@@ -30,12 +30,17 @@ M.base46 = {
 --           n = " 🙤  ",      -- Normal
 --           i = " 🙛  ",      -- Insert
 --           v = " 🙵  ",      -- Visual
---           V = " ",      -- Visual Line
+--           V = "♣  ",      -- Visual Line
 --           [""] = " ☢  ", -- Visual Block (Ctrl-V)
---           c = " 🙪  ",      -- Command
---           R = " ♣  ",      -- Replace
---           t = " ⨋ ",      -- Terminal
+--           c = " ⌘  Command ",      -- Command
+--           R = " ☢  ",      -- Replace
+--           t = " Σ ",      -- Terminal
 --         }
+--
+--
+--            V = " ♣ v-line ", -- Visual Line
+--            R = " ☢  Replace ",      -- Replace
+--            t = " Σ Terminal ",      -- Terminal
 --         -- Get the icon for current mode, fallback to normal mode icon
 --         local icon = mode_icons[m] or mode_icons["n"]
 --         return mode_hl .. icon .. mode_data[1] .. " %#St_NormalMode#"
@@ -44,27 +49,27 @@ M.base46 = {
 --   },
 -- }
 
-
--- opt 2 
+-- opt 2
 M.ui = {
   statusline = {
-    theme = 'default',
-    separator_style = 'arrow',
+    theme = "default",
+    separator_style = "arrow",
     order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "lsp", "cwd", "cursor" },
-  modules = {
+    modules = {
       mode = function()
-        local stl = require("nvchad.stl.utils")
+        local stl = require "nvchad.stl.utils"
         local m = vim.api.nvim_get_mode().mode
         local mode_data = stl.modes[m] or stl.modes["n"]
         local mode_hl = "%#St_" .. mode_data[2] .. "Mode#"
         local mode_icons = {
-          n = " 🙤  Normal",      -- Normal
-          i = " 🙛  Insert ",      -- Insert
-          v = " 🙵   Visual ",      -- Visual
-          V = " ♣ v-line ", -- Visual Line
-          c = " 🙪  Command ",      -- Command
-          R = " ☢  Replace ",      -- Replace
-          t = " Σ Terminal ",      -- Terminal
+          n = " 🙤  Normal", -- Normal
+          i = " 🙛  Insert", -- Insert
+          v = " ⌘  Visual", -- Visual
+          V = " ♣ v-line", -- Visual Line
+          [""] = " λ v-block", -- Visual Block (Ctrl-V)
+          c = " 🙵   Command", -- Command
+          R = " ☢  Replace", -- Replace
+          t = " Σ Terminal", -- Terminal
         }
         -- local mode_icons = {
         --   n = " N ",      -- Normal
@@ -75,16 +80,24 @@ M.ui = {
         --   c = " C ",      -- Command
         --   R = " R ",      -- Replace
         --   t = " T ",      -- Terminal
+        --
+        --   -----------
+        --
+        --             n = " ϰ Normal",      -- Normal
+        -- i = " ♠ Insert ",      -- Insert
+        -- v = " λ Visual ",      -- Visual
+        -- V = " ♣ v-line ", -- Visual Line
+        -- c = " ⌘  Command ",      -- Command
+        -- R = " ☢  Replace ",      -- Replace
+        -- t = " Σ Terminal ",      -- Terminal
+
         -- }
         local icon = mode_icons[m] or mode_icons["n"]
         return mode_hl .. icon .. " %#St_NormalMode#"
       end,
-    }
+    },
   },
 }
-
-
-
 
 -- ayu_dark, gatekeeper, jelly beans, yoru, rxyhn
 

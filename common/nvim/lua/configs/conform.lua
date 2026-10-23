@@ -1,17 +1,14 @@
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },
-    qml = { "qmlformat" },
     -- css = { "prettier" },
     -- html = { "prettier" },
+    qml = { "qmlformat" },
   },
-
   formatters = {
     qmlformat = {
-      command = "/usr/lib64/qt6/bin/qmlformat",
+      command = "qmlformat-qt6",
       args = { "--indent-width", "2", "--inplace", "$FILENAME" },
-      stdin = false,
-      inherit = false,
     },
   },
 

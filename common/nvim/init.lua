@@ -116,7 +116,10 @@ vim.keymap.set(
 vim.keymap.set("n", "<leader>tn", ":set relativenumber!<CR>", { desc = "Toggle relative numbers on lines" })
 vim.opt.number = true -- Show absolute line number on current line
 vim.opt.relativenumber = false -- show relative nums for other lines
-vim.opt.scrolloff = 4
+vim.opt.scrolloff = 0
+
+vim.keymap.set("n", "]h", function() require("gitsigns").next_hunk() end, { desc = "Next Git hunk" })
+vim.keymap.set("n", "[h", function() require("gitsigns").prev_hunk() end, { desc = "Previous Git hunk" })
 
 -- error-only config so the lsp doesnt clutter the view
 local error_only_config = {

@@ -12,8 +12,8 @@ return {
       require "configs.lspconfig"
     end,
   },
--- discord presence
--- {'andweeb/presence.nvim', lazy = false, },
+  -- discord presence
+  -- {'andweeb/presence.nvim', lazy = false, },
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {
@@ -23,17 +23,16 @@ return {
   -- 		},
   -- 	},
   -- },
-	--
-    {
-      "iamcco/markdown-preview.nvim",
-      cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-      build = "cd app && yarn install",
-      init = function()
-        vim.g.mkdp_filetypes = { "markdown" }
-      end,
-      ft = { "markdown" },
-    },
-
+  --
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = "cd app && yarn install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    ft = { "markdown" },
+  },
 
   -- {
   --   "sphamba/smear-cursor.nvim",
@@ -70,67 +69,62 @@ return {
   --   },
   -- },
 
+  {
+    "karb94/neoscroll.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("neoscroll").setup {
+        hide_cursor = true,
+        stop_eof = true,
+        respect_scrolloff = true,
+        cursor_scrolls_alone = true,
+        easing_function = "sine",
+        -- Easing options: nil (default), linear, quadratic, cubic, quartic, quintic, circular, sine
+        -- nil - Default (linear-ish)
+        -- "linear" - Constant speed (robotic)
+        -- "quadratic" - Slow start/end, fast middle (smooth)
+        -- "cubic" - More pronounced slow start/end
+        -- "quartic" - Even more pronounced
+        -- "quintic" - Very smooth
+        -- "circular" - Circular motion feel
+        -- "sine" - Sine wave motion
+      }
 
+      -- Smooth movement mappings
+      local t = {}
 
-    {
-      "karb94/neoscroll.nvim",
-      event = "VeryLazy",
-      config = function()
-        require("neoscroll").setup({
-          hide_cursor = true,
-          stop_eof = true,
-          respect_scrolloff = true,
-          cursor_scrolls_alone = true,
-          easing_function = "sine", 
-          -- Easing options: nil (default), linear, quadratic, cubic, quartic, quintic, circular, sine
-          -- nil - Default (linear-ish)
-          -- "linear" - Constant speed (robotic)
-          -- "quadratic" - Slow start/end, fast middle (smooth)
-          -- "cubic" - More pronounced slow start/end
-          -- "quartic" - Even more pronounced
-          -- "quintic" - Very smooth
-          -- "circular" - Circular motion feel
-          -- "sine" - Sine wave motion
-        })
-        
-        -- Smooth movement mappings
-        local t = {}
-        
-        -- j/k keys
-        -- t['j'] = {'scroll', {0.05, 'true', '150'}}     -- CHANGED: Last number is duration (ms)
-        -- t['k'] = {'scroll', {-0.05, 'true', '150'}}
-        --
-        -- -- Arrow keys (ADDED)
-        -- t['<Down>'] = {'scroll', {0.2, 'true', '150'}}
-        -- t['<Up>'] = {'scroll', {-0.2, 'true', '150'}}
-        
-        -- Optional: Add Ctrl+d/u for page scrolling
-        t['<C-d>'] = {'scroll', {'vim.wo.scroll', 'true', '250'}}
-        t['<C-u>'] = {'scroll', {'-vim.wo.scroll', 'true', '250'}}
-        
-        -- Optional: Add zz, zt, zb for centering
-        t['zz'] = {'zz', {'150'}}
-        t['zt'] = {'zt', {'150'}}
-        t['zb'] = {'zb', {'150'}}
-        
-        -- require('neoscroll.config').set_mappings(t)
-      end,
-    },
+      -- j/k keys
+      -- t['j'] = {'scroll', {0.05, 'true', '150'}}     -- CHANGED: Last number is duration (ms)
+      -- t['k'] = {'scroll', {-0.05, 'true', '150'}}
+      --
+      -- -- Arrow keys (ADDED)
+      -- t['<Down>'] = {'scroll', {0.2, 'true', '150'}}
+      -- t['<Up>'] = {'scroll', {-0.2, 'true', '150'}}
 
+      -- Optional: Add Ctrl+d/u for page scrolling
+      t["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "250" } }
+      t["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "250" } }
 
+      -- Optional: Add zz, zt, zb for centering
+      t["zz"] = { "zz", { "150" } }
+      t["zt"] = { "zt", { "150" } }
+      t["zb"] = { "zb", { "150" } }
 
-    {
-        'MeanderingProgrammer/render-markdown.nvim',
-        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
-        -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
-        -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-        ---@module 'render-markdown'
-        ---@type render.md.UserConfig
-        opts = {},
-    },
+      -- require('neoscroll.config').set_mappings(t)
+    end,
+  },
 
-      
-	  {
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  },
+
+  {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
@@ -139,18 +133,18 @@ return {
       "saadparwaiz1/cmp_luasnip",
     },
     config = function()
-      local cmp = require'cmp'
-      local luasnip = require'luasnip'
+      local cmp = require "cmp"
+      local luasnip = require "luasnip"
 
-      cmp.setup({
+      cmp.setup {
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
         },
-        mapping = cmp.mapping.preset.insert({
+        mapping = cmp.mapping.preset.insert {
           ["<C-Space>"] = cmp.mapping.complete(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<CR>"] = cmp.mapping.confirm { select = true },
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
@@ -160,13 +154,37 @@ return {
               fallback()
             end
           end, { "i", "s" }),
-        }),
-        sources = cmp.config.sources({
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'buffer' },
-        }),
-      })
+        },
+        sources = cmp.config.sources {
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+          { name = "buffer" },
+        },
+      }
     end,
+  },
+
+  {
+    "HakonHarnes/img-clip.nvim",
+    event = "VeryLazy",
+    opts = {
+      default = {
+        dir_path = "/home/hexogen/Pictures/assets",
+        relative_to_current_file = false,
+        prompt_for_file_name = false,
+        file_name = "%Y%m%d-%H%M%S",
+      },
+    },
+    keys = {
+      { "<leader>p", "<cmd>PasteImage<cr>" },
+    },
+  },
+  {
+    "folke/snacks.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      image = { enabled = true },
+    },
   },
 }

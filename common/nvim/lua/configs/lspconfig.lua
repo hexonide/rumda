@@ -42,6 +42,70 @@ vim.lsp.config('clangd', {
 })
 vim.lsp.enable('clangd')
 
+
+-- Rust
+local root = vim.fn.getcwd()
+local is_rustc = vim.uv.fs_stat(root .. '/x.py') ~= nil
+
+local ra_settings = {}
+local ra_env = nil
+
+if is_rustc then
+  ra_env = {
+    RUSTC = root .. '/build/host/stage0/bin/rustc',
+    CARGO = root .. '/build/host/stage0/bin/cargo',
+  }
+  ra_settings = {
+    linkedProjects = {
+      'Cargo.toml',
+      'compiler/rustc_codegen_cranelift/Cargo.toml',
+      'compiler/rustc_codegen_gcc/Cargo.toml',
+      'library/Cargo.toml',
+      'src/bootstrap/Cargo.toml',
+      'src/tools/rust-analyzer/Cargo.toml',
+    },
+    check = {
+      invocationStrategy = 'once',
+      overrideCommand = {
+        'python3', 'x.py', 'check', '--json-output',
+        '--build-dir', 'build-rust-analyzer',
+      },
+    },
+    rustfmt = {
+      overrideCommand = {
+        root .. '/build/host/rustfmt/bin/rustfmt',
+        '--edition=2024',
+      },
+    },
+    procMacro = {
+      enable = true,
+      server = root .. '/build/host/stage0/libexec/rust-analyzer-proc-macro-srv',
+    },
+    rustc = { source = './Cargo.toml' },
+    cargo = {
+      sysrootSrc = './library',
+      extraEnv = { RUSTC_BOOTSTRAP = '1' },
+      buildScripts = {
+        enable = true,
+        invocationStrategy = 'once',
+        overrideCommand = {
+          'python3', 'x.py', 'check', '--json-output',
+          '--compile-time-deps', '--build-dir', 'build-rust-analyzer',
+        },
+      },
+    },
+  }
+end
+
+vim.lsp.config('rust_analyzer', {
+  cmd = { 'rust-analyzer' },
+  cmd_env = ra_env,
+  filetypes = { 'rust' },
+  root_markers = { '.git' },
+  settings = { ['rust-analyzer'] = ra_settings },
+})
+vim.lsp.enable('rust_analyzer')
+
 -- LSP Keybindings (when LSP attaches to buffer)
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
