@@ -94,7 +94,7 @@ and you'll be done!
 
 ```
 hyprland quickshell rofi alacritty awww thunar neofetch swappy grim zathura yazi jetbrains-mono-fonts hyprpicker neovim \
-ghostty  nautilus  btop bpytop obs-studio slurp xdg-desktop-portal-hyprland wl-clipboard git\
+kitty  nautilus  btop bpytop obs-studio slurp xdg-desktop-portal-hyprland wl-clipboard git\
  jq lz4-devel lua python3 brightnessctl playerctl wpctl pipewire wireplumber
 ```
 
@@ -129,7 +129,6 @@ And lastly, something to setup the custom discord theme.
 | `$mainMod + V`               | Toggle floating mode        |
 | `$mainMod + P`               | Toggle pseudo layout        |
 | `$mainMod + L`               | Lock screen                 |
-| `$mainMod + Shift + Return`  | Open Ghostty terminal       |
 | `$mainMod + shift + T`       | OCR into clipboard          |
 | `$mainMod + Shift + Alt + Q` | Force kill window           |
 | `$mainMod + Alt + Arrows`    | Move focus between windows  |

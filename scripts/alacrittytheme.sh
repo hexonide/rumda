@@ -21,9 +21,11 @@ case "$THEME" in
 esac
 
 if [[ ! -f "$SRC" ]]; then
-  echo "❌ Theme config not found at: $SRC"
+  echo "[X] Theme config not found at: $SRC"
   exit 1
 fi
+
+$HOME/.config/rumda/scripts/kitty_theme.sh $1 &
 
 ln -fs "$SRC" "$COMMON_FILE"
 
