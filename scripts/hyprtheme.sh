@@ -26,6 +26,7 @@ if [[ ! -f "$TINKERER_FLAG" ]]; then
     }
     
     backup_config "$HOME/.config/hypr/hyprland.conf" "Hyprland"
+    backup_config "$HOME/.config/kitty/kitty.conf" "Kitty"
     backup_config "$HOME/.config/alacritty/alacritty.toml" "Alacritty"
     backup_config "$HOME/.config/yazi/theme.toml" "Yazi"
     backup_config "$HOME/.config/zathura/zathurarc" "Zathura"
