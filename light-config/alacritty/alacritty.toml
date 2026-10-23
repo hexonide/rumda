@@ -26,13 +26,11 @@ title = "  "
 
 [font]
 # =======================Terminess
-# bold.family = "Hurmit Nerd Font"
+italic.family = "Greybeard 16px"
+bold_italic.family = "Greybeard 16px"
 normal.family = "Terminess Nerd Font"
 normal.style = "Bold"
 
-bold.style = "Bold"
-italic.family = "Terminess Nerd Font"
-bold_italic.family = "Terminess Nerd Font"
 size = 12.0
 # =======================Dogica
 # normal.family = "Dogica Pixel"
