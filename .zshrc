@@ -203,7 +203,7 @@ EDITOR=nvim
 if command -v eza > /dev/null; then
   alias ls='eza -h --git --icons -sold'
   alias ll='eza -h --git --icons -l -sold'
-  alias l='eza -h --git --icons -l -sold -s name'
+  alias l='eza -h --git --icons -l -sold -s name --group-directories-first'
   alias la='eza -h --git --icons -la -sold'
   alias lt='eza -h --tree --git --icons -l -sold'
   alias lta='eza -h --tree --git --icons -la -sold'
@@ -256,6 +256,7 @@ alias grp-extensions='~/d-velopment/scripts/group_extensions.sh'
 alias grp-pdfs='~/d-velopment/scripts/grp_pdfs.sh'
 alias termdown='termdown -f roman'
 alias auralis='~/.config/auralis_walls/scripts/auralis.sh'
+alias rustc-devel='~/d-velopment/copy-dir/rust/build/host/stage1/bin/rustc'
 alias phonecam='scrcpy --video-source=camera --camera-id=0 --camera-size=1920x1080 --camera-fps=30 --v4l2-sink=/dev/video10 --no-video-playback --audio-source=mic-camcorder'
 
 
