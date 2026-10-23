@@ -5,6 +5,7 @@ sshkey
 id_*
 sshkey.pub
 pictures/drink.jpg
+common/nvim/lazy-lock.json
 common/nvim/pack/github/start/copilot.vim
 common/tinkerer/DoNotDeleteMe.txt
 light-config/rofi/calligraphy/bg_new.svg
