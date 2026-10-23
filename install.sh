@@ -17,6 +17,7 @@ DISABLE_BACKUP=false  # Set to true to skip backing up your current configs (NOT
 
 INSTALL_HYPRLAND=true
 INSTALL_QUICKSHELL=true
+INSTALL_KITTY=true
 INSTALL_ALACRITTY=true
 INSTALL_ZATHURA=true
 INSTALL_ROFI=true
@@ -238,6 +239,10 @@ fi
 
 if [ "$INSTALL_QUICKSHELL" = true ]; then
     install_config "$SOURCE_DIR/common/quickshell" "$DEST_DIR/quickshell" "Quickshell"
+fi
+
+if [ "$INSTALL_KITTY" = true ]; then
+    install_config "$SOURCE_DIR/light-config/kitty" "$DEST_DIR/kitty" "Kitty"
 fi
 
 if [ "$INSTALL_ALACRITTY" = true ]; then
