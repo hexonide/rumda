@@ -121,45 +121,45 @@ vim.opt.scrolloff = 0
 vim.keymap.set("n", "]h", function() require("gitsigns").next_hunk() end, { desc = "Next Git hunk" })
 vim.keymap.set("n", "[h", function() require("gitsigns").prev_hunk() end, { desc = "Previous Git hunk" })
 
--- error-only config so the lsp doesnt clutter the view
-local error_only_config = {
-  severity_sort = true,
-  signs = {
-    severity = { min = vim.diagnostic.severity.ERROR },
-  },
-  virtual_text = {
-    severity = { min = vim.diagnostic.severity.ERROR },
-  },
-  float = {
-    severity = { min = vim.diagnostic.severity.ERROR },
-  },
-  underline = {
-    severity = { min = vim.diagnostic.severity.ERROR },
-  },
+
+-- Error toggling
+local diagnostic_modes = {
+  { name = "errors only", min = vim.diagnostic.severity.ERROR },
+  { name = "errors and warnings", min = vim.diagnostic.severity.WARN },
+  { name = "everything", min = vim.diagnostic.severity.HINT },
+  { name = "hidden", min = nil },
 }
 
--- Apply error-only config by default
-vim.diagnostic.config(error_only_config)
+local diagnostic_index = 1
 
--- Toggle diagnostics visibility (toggle lsp in normal mode through leader + t + d)
-local diagnostics_visible = true
-vim.keymap.set("n", "<Leader>td", function()
-  diagnostics_visible = not diagnostics_visible
-
-  if diagnostics_visible then
-    -- Restore error-only config
-    vim.diagnostic.config(error_only_config)
-  else
-    -- Hide all diagnostics
+local function apply_diagnostic_mode()
+  local mode = diagnostic_modes[diagnostic_index]
+  if mode.min == nil then
     vim.diagnostic.config {
       virtual_text = false,
       signs = false,
       underline = false,
     }
+    return
   end
+  local filter = { severity = { min = mode.min } }
+  vim.diagnostic.config {
+    severity_sort = true,
+    signs = filter,
+    virtual_text = filter,
+    underline = filter,
+    float = filter,
+  }
+end
 
-  print("Diagnostics " .. (diagnostics_visible and "visible" or "hidden"))
-end, { desc = "Toggle diagnostics visibility" })
+vim.schedule(apply_diagnostic_mode)
+vim.api.nvim_create_autocmd("LspAttach", { callback = apply_diagnostic_mode })
+
+vim.keymap.set("n", "<Leader>td", function()
+  diagnostic_index = diagnostic_index % #diagnostic_modes + 1
+  apply_diagnostic_mode()
+  vim.notify("Diagnostics: " .. diagnostic_modes[diagnostic_index].name)
+end, { desc = "Cycle diagnostic visibility" })
 
 vim.g.mkdp_browser = "firefox"
 
