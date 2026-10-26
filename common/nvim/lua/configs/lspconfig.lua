@@ -56,43 +56,13 @@ if is_rustc then
     CARGO = root .. '/build/host/stage0/bin/cargo',
   }
   ra_settings = {
-    linkedProjects = {
-      'Cargo.toml',
-      'compiler/rustc_codegen_cranelift/Cargo.toml',
-      'compiler/rustc_codegen_gcc/Cargo.toml',
-      'library/Cargo.toml',
-      'src/bootstrap/Cargo.toml',
-      'src/tools/rust-analyzer/Cargo.toml',
-    },
-    check = {
-      invocationStrategy = 'once',
-      overrideCommand = {
-        'python3', 'x.py', 'check', '--json-output',
-        '--build-dir', 'build-rust-analyzer',
-      },
-    },
-    rustfmt = {
-      overrideCommand = {
-        root .. '/build/host/rustfmt/bin/rustfmt',
-        '--edition=2024',
-      },
-    },
-    procMacro = {
-      enable = true,
-      server = root .. '/build/host/stage0/libexec/rust-analyzer-proc-macro-srv',
-    },
-    rustc = { source = './Cargo.toml' },
+    linkedProjects = { 'library/Cargo.toml' },
+    checkOnSave = false,
+    procMacro = { enable = false },
     cargo = {
       sysrootSrc = './library',
       extraEnv = { RUSTC_BOOTSTRAP = '1' },
-      buildScripts = {
-        enable = true,
-        invocationStrategy = 'once',
-        overrideCommand = {
-          'python3', 'x.py', 'check', '--json-output',
-          '--compile-time-deps', '--build-dir', 'build-rust-analyzer',
-        },
-      },
+      buildScripts = { enable = false },
     },
   }
 end

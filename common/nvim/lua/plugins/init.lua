@@ -187,4 +187,57 @@ return {
       image = { enabled = true },
     },
   },
+
+  {
+    "jake-stewart/multicursor.nvim",
+    branch = "1.0",
+    event = "VeryLazy",
+    config = function()
+      local mc = require "multicursor-nvim"
+      mc.setup()
+
+      local set = vim.keymap.set
+
+      set({ "n", "x" }, "mn", function()
+        mc.matchAddCursor(1)
+      end, { desc = "Add cursor at next match" })
+      set({ "n", "x" }, "mN", function()
+        mc.matchAddCursor(-1)
+      end, { desc = "Add cursor at previous match" })
+      set({ "n", "x" }, "ms", function()
+        mc.matchSkipCursor(1)
+      end, { desc = "Skip next match" })
+      set({ "n", "x" }, "mS", function()
+        mc.matchSkipCursor(-1)
+      end, { desc = "Skip previous match" })
+      set({ "n", "x" }, "m<Up>", function()
+        mc.lineAddCursor(-1)
+      end, { desc = "Add cursor above" })
+      set({ "n", "x" }, "m<Down>", function()
+        mc.lineAddCursor(1)
+      end, { desc = "Add cursor below" })
+      set({ "n", "x" }, "m<S-Up>", function()
+        mc.lineSkipCursor(-1)
+      end, { desc = "Skip line above" })
+      set({ "n", "x" }, "m<S-Down>", function()
+        mc.lineSkipCursor(1)
+      end, { desc = "Skip line below" })
+      set("n", "m*", mc.matchAllAddCursors, { desc = "Add cursors at all matches" })
+      set("x", "I", mc.insertVisual)
+      set("x", "A", mc.appendVisual)
+
+      mc.addKeymapLayer(function(layer)
+        layer({ "n", "x" }, "<left>", mc.prevCursor)
+        layer({ "n", "x" }, "<right>", mc.nextCursor)
+        layer({ "n", "x" }, "mx", mc.deleteCursor)
+        layer("n", "<esc>", function()
+          if not mc.cursorsEnabled() then
+            mc.enableCursors()
+          else
+            mc.clearCursors()
+          end
+        end)
+      end)
+    end,
+  },
 }
