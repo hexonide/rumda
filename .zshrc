@@ -97,6 +97,18 @@ export FZF_DEFAULT_OPTS="--height 40% --history-size=10000000000
 setopt prompt_subst
 
 
+
+if command -v eza > /dev/null; then
+  alias ls='eza -h --git --icons -sold'
+  alias ll='eza -h --git --icons -l -sold'
+  alias l='eza -h --git --icons -l -sold -s name --group-directories-first'
+  alias la='eza -h --git --icons -la -sold'
+  alias lt='eza -h --tree --git --icons -l -sold'
+  alias lta='eza -h --tree --git --icons -la -sold'
+fi
+
+
+
 ## syntax highlighting
 if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
     . /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

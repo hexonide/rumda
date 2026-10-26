@@ -53,16 +53,6 @@ alias phonecam='scrcpy --video-source=camera --camera-id=0 --camera-size=1920x10
 
 
 
-if command -v eza > /dev/null; then
-  alias ls='eza -h --git --icons -sold'
-  alias ll='eza -h --git --icons -l -sold'
-  alias l='eza -h --git --icons -l -sold -s name --group-directories-first'
-  alias la='eza -h --git --icons -la -sold'
-  alias lt='eza -h --tree --git --icons -l -sold'
-  alias lta='eza -h --tree --git --icons -la -sold'
-fi
-
-
 ### rustc development stuff: 
 LITP='(^|[^[:alnum:]_.])([0-9]{4,}|0x[0-9a-fA-F]{5,}|0b[01]{5,})'
 LITX='(issue|since|version) = "|https?://'
