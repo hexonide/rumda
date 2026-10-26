@@ -1,3 +1,4 @@
+zmodload zsh/zprof
 # Created by newuser for 5.9
 #
 # If you come from bash you might have to change your $PATH.
@@ -5,6 +6,7 @@
 # source ~/.config/zshrc.d/dots-hyprland.zsh
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+source ~/.config/rumda/scripts/shell_utils.sh
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -92,16 +94,8 @@ export FZF_DEFAULT_OPTS="--height 40% --history-size=10000000000
 
 
 # User configuration
-
-# Load vcs_info module
-autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
 setopt prompt_subst
 
-# Configure vcs_info
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' check-for-changes true
 
 ## syntax highlighting
 if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
@@ -200,80 +194,12 @@ export MANPAGER='nvim +Man!'
 
 EDITOR=nvim
 
-if command -v eza > /dev/null; then
-  alias ls='eza -h --git --icons -sold'
-  alias ll='eza -h --git --icons -l -sold'
-  alias l='eza -h --git --icons -l -sold -s name --group-directories-first'
-  alias la='eza -h --git --icons -la -sold'
-  alias lt='eza -h --tree --git --icons -l -sold'
-  alias lta='eza -h --tree --git --icons -la -sold'
-fi
-
-## alias s='sleep 3 && grim "$HOME/Pictures/Screenshots/$(date +%Y%m%d-%H%M%S).png"'
-#
-# alias s='nohup sh -c "sleep 3 && grim \"$HOME/Pictures/Screenshots/\$(date +%Y%m%d-%H%M%S).png\"" >/dev/null 2>&1 &'
-imgconcat() {
-    ffmpeg -i "$1" -i "$2" -filter_complex "[0:v][1:v]vstack=inputs=2" -frames:v 1 "output_$(date +%Y%m%d_%H%M%S).png"
-}
-
-alias run='./a.out'
-alias runh='cd && ./a.out'
-alias hexo='~/d-velopment/scripts/hexofetch'
-alias donut='~/d-velopment/backups/donut'
-alias grep='grep --color=always'
-alias xgrep='grep --color=never -rl'
-alias objdump='objdump --visualize-jumps=extended-color --disassembler-color=extended'
-alias avr-objdump='avr-objdump --visualize-jumps=extended-color --disassembler-color=extended'
-alias b64='base64'
-alias q=exit 
-alias y='yazi'
-alias e='nvim'
-alias z='~/d-velopment/scripts/zath.sh'
-alias convertgif='~/d-velopment/scripts/gif_pallette.sh'
-alias util='nvim ~/d-velopment/mktab/Util/general.md'
-alias zig-std='cd /usr/lib/zig/std && nvim && cd ~'
-alias gac='git add . && git commit -m'
-alias gs='git status'
-alias iamb='EDITOR=nvim iamb'
-alias cb='cargo build'
-alias cr='cargo run'
-alias cargo-generate-flamelens='cargo flamegraph --post-process "flamelens --echo"'
-alias temp='echo "CPU Temp: $(sensors | awk '\''/Tctl/ {print $2}'\'')" | sed "s/+/\x1b[31m+/;s/°C/°C\x1b[0m/"'
-alias qtcreator='cd /home/hexogen/Downloads && QT_QPA_PLATFORM=xcb ./qt-creator-opensource-linux-x86_64-17.0.2.run &disown'
-alias rumdafetch='neofetch --source /home/$USER/.config/rumda/common/neofetch/2.svg --kitty --size 230'
-alias wall='/$HOME/.config/rumda/scripts/wall.sh'
-alias hyprtheme='/$HOME/.config/rumda/scripts/hyprtheme.sh'
-alias warmtheme='$HOME/.config/rumda/scripts/warmtheme.sh'
-alias pixeltheme='$HOME/.config/rumda/scripts/pixeltheme.sh'
-alias dtheme='$HOME/.config/dark/darktheme.sh'
-alias zatheme='/$HOME/.config/rumda/scripts/zathuratheme.sh'
-alias alactheme='/$HOME/.config/rumda/scripts/alacrittytheme.sh'
-alias bngcat='./Downloads/wayland-bongocat/build/bongocat --watch-config --config /home/hexogen/.config/rumda/bongocat.conf &disown'
-alias borderson='hyprctl plugin load /home/hexogen/d-velopment/copy-dir/bordersplusplus/borders-plus-plus/libandalus.so'
-alias bordersoff='hyprctl plugin unload /home/hexogen/d-velopment/copy-dir/bordersplusplus/borders-plus-plus/libandalus.so'
-alias htbdl='~/d-velopment/scripts/htbdl.sh'
-alias mkc-devel='/home/hexogen/d-velopment/makc/tests/mkc'
-alias mkc-debug='/home/hexogen/d-velopment/makc/tests/mkc-asan'
-alias grp-extensions='~/d-velopment/scripts/group_extensions.sh'
-alias grp-pdfs='~/d-velopment/scripts/grp_pdfs.sh'
-alias termdown='termdown -f roman'
-alias auralis='~/.config/auralis_walls/scripts/auralis.sh'
-alias rustc-devel='~/d-velopment/copy-dir/rust/build/host/stage1/bin/rustc'
-alias phonecam='scrcpy --video-source=camera --camera-id=0 --camera-size=1920x1080 --camera-fps=30 --v4l2-sink=/dev/video10 --no-video-playback --audio-source=mic-camcorder'
-
-
-
 BRACK_HEX="%F{#53595f}"
 USER_HEX="%F{#BAC7DD}"
 AT_HEX="%F{#c9938a}"
 HOST_HEX="%F{#2D6880}"
 CWD_HEX="%F{#79AAEB}"
 UID_HEX="%F{#F26E74}"
-
-zstyle ':vcs_info:*' unstagedstr ' +%%'
-zstyle ':vcs_info:*' stagedstr ' +'
-zstyle ':vcs_info:git:*' formats "$BRACK_HEX($USER_HEX%b$HOST_HEX%u$USER_HEX%c$BRACK_HEX)"
-zstyle ':vcs_info:git:*' actionformats "$BRACK_HEX($USER_HEX%b$BRACK_HEX|$CWD_HEX%a$HOST_HEX%u$USER_HEX%c$BRACK_HEX)"
 
 ## PS1='%B%F{034}%n@%m%f%b:%B%F{#00bbbb}%~ %#%f%b '
 ## PS1="%B%K{#6791C9}%F{#12171d} skin crawler %K{#333B3F}%F{#6791C9} %~ %f%k%b "
@@ -333,3 +259,31 @@ export PATH="$HOME/.cargo/bin/:$HOME/.local/bin/:$PATH"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+
+
+### auto sourcing zsh and util file
+
+
+zmodload -F zsh/stat b:zstat
+autoload -Uz add-zsh-hook
+
+typeset -ga _rc_watch
+_rc_watch=(~/.zshrc ~/.config/rumda/scripts/shell_utils.sh)
+typeset -gA _rc_mtimes
+
+_rc_check() {
+  local f m changed=0
+  for f in $_rc_watch; do
+    [[ -f $f ]] || continue
+    zstat -A m +mtime -- $f
+    if [[ -n ${_rc_mtimes[$f]} && ${_rc_mtimes[$f]} != $m[1] ]]; then
+      changed=1
+    fi
+    _rc_mtimes[$f]=$m[1]
+  done
+  (( changed )) && source ~/.zshrc
+}
+
+add-zsh-hook precmd _rc_check
+_rc_check

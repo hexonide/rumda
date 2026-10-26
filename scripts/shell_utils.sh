@@ -1,0 +1,73 @@
+## alias s='sleep 3 && grim "$HOME/Pictures/Screenshots/$(date +%Y%m%d-%H%M%S).png"'
+#
+# alias s='nohup sh -c "sleep 3 && grim \"$HOME/Pictures/Screenshots/\$(date +%Y%m%d-%H%M%S).png\"" >/dev/null 2>&1 &'
+imgconcat() {
+    ffmpeg -i "$1" -i "$2" -filter_complex "[0:v][1:v]vstack=inputs=2" -frames:v 1 "output_$(date +%Y%m%d_%H%M%S).png"
+}
+
+alias run='./a.out'
+alias runh='cd && ./a.out'
+alias hexo='~/d-velopment/scripts/hexofetch'
+alias donut='~/d-velopment/backups/donut'
+alias grep='grep --color=always'
+alias xgrep='grep --color=never -rl'
+alias objdump='objdump --visualize-jumps=extended-color --disassembler-color=extended'
+alias avr-objdump='avr-objdump --visualize-jumps=extended-color --disassembler-color=extended'
+alias b64='base64'
+alias q=exit 
+alias y='yazi'
+alias e='nvim'
+alias z='~/d-velopment/scripts/zath.sh'
+alias convertgif='~/d-velopment/scripts/gif_pallette.sh'
+alias util='nvim ~/d-velopment/mktab/Util/general.md'
+alias zig-std='cd /usr/lib/zig/std && nvim && cd ~'
+alias gac='git add . && git commit -m'
+alias gs='git status'
+alias iamb='EDITOR=nvim iamb'
+alias cb='cargo build'
+alias cr='cargo run'
+alias cargo-generate-flamelens='cargo flamegraph --post-process "flamelens --echo"'
+alias temp='echo "CPU Temp: $(sensors | awk '\''/Tctl/ {print $2}'\'')" | sed "s/+/\x1b[31m+/;s/°C/°C\x1b[0m/"'
+alias qtcreator='cd /home/hexogen/Downloads && QT_QPA_PLATFORM=xcb ./qt-creator-opensource-linux-x86_64-17.0.2.run &disown'
+alias rumdafetch='neofetch --source /home/$USER/.config/rumda/common/neofetch/2.svg --kitty --size 230'
+alias wall='/$HOME/.config/rumda/scripts/wall.sh'
+alias hyprtheme='/$HOME/.config/rumda/scripts/hyprtheme.sh'
+alias warmtheme='$HOME/.config/rumda/scripts/warmtheme.sh'
+alias pixeltheme='$HOME/.config/rumda/scripts/pixeltheme.sh'
+alias dtheme='$HOME/.config/dark/darktheme.sh'
+alias zatheme='/$HOME/.config/rumda/scripts/zathuratheme.sh'
+alias alactheme='/$HOME/.config/rumda/scripts/alacrittytheme.sh'
+alias bngcat='./Downloads/wayland-bongocat/build/bongocat --watch-config --config /home/hexogen/.config/rumda/bongocat.conf &disown'
+alias borderson='hyprctl plugin load /home/hexogen/d-velopment/copy-dir/bordersplusplus/borders-plus-plus/libandalus.so'
+alias bordersoff='hyprctl plugin unload /home/hexogen/d-velopment/copy-dir/bordersplusplus/borders-plus-plus/libandalus.so'
+alias htbdl='~/d-velopment/scripts/htbdl.sh'
+alias mkc-devel='/home/hexogen/d-velopment/makc/tests/mkc'
+alias mkc-debug='/home/hexogen/d-velopment/makc/tests/mkc-asan'
+alias grp-extensions='~/d-velopment/scripts/group_extensions.sh'
+alias grp-pdfs='~/d-velopment/scripts/grp_pdfs.sh'
+alias termdown='termdown -f roman'
+alias auralis='~/.config/auralis_walls/scripts/auralis.sh'
+alias rustc-devel='~/d-velopment/copy-dir/rust/build/host/stage1/bin/rustc'
+alias c3c-devel='~/d-velopment/copy-dir/c3c/build/c3c'
+alias phonecam='scrcpy --video-source=camera --camera-id=0 --camera-size=1920x1080 --camera-fps=30 --v4l2-sink=/dev/video10 --no-video-playback --audio-source=mic-camcorder'
+
+
+
+if command -v eza > /dev/null; then
+  alias ls='eza -h --git --icons -sold'
+  alias ll='eza -h --git --icons -l -sold'
+  alias l='eza -h --git --icons -l -sold -s name --group-directories-first'
+  alias la='eza -h --git --icons -la -sold'
+  alias lt='eza -h --tree --git --icons -l -sold'
+  alias lta='eza -h --tree --git --icons -la -sold'
+fi
+
+
+### rustc development stuff: 
+LITP='(^|[^[:alnum:]_.])([0-9]{4,}|0x[0-9a-fA-F]{5,}|0b[01]{5,})'
+LITX='(issue|since|version) = "|https?://'
+lit() { git grep -nE "$LITP" -- "$@" | grep -vE "$LITX"; }
+litqf() { lit "$@" > /tmp/qf.txt && nvim -q /tmp/qf.txt -c copen; }
+famqnt() { git grep -nE "$LITP" -- "$@" | grep -vE "$LITX" | sed -E 's/^[^:]*:[0-9]*:\s*//' | cut -c1-20 | sort | uniq -c | sort -rn | head -15; }
+
+
