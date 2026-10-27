@@ -50,14 +50,3 @@ alias auralis='~/.config/auralis_walls/scripts/auralis.sh'
 alias rustc-devel='~/d-velopment/copy-dir/rust/build/host/stage1/bin/rustc'
 alias c3c-devel='~/d-velopment/copy-dir/c3c/build/c3c'
 alias phonecam='scrcpy --video-source=camera --camera-id=0 --camera-size=1920x1080 --camera-fps=30 --v4l2-sink=/dev/video10 --no-video-playback --audio-source=mic-camcorder'
-
-
-
-### rustc development stuff: 
-LITP='(^|[^[:alnum:]_.])([0-9]{4,}|0x[0-9a-fA-F]{5,}|0b[01]{5,})'
-LITX='(issue|since|version) = "|https?://'
-lit() { git grep -nE "$LITP" -- "$@" | grep -vE "$LITX"; }
-litqf() { lit "$@" > /tmp/qf.txt && nvim -q /tmp/qf.txt -c copen; }
-famqnt() { git grep -nE "$LITP" -- "$@" | grep -vE "$LITX" | sed -E 's/^[^:]*:[0-9]*:\s*//' | cut -c1-20 | sort | uniq -c | sort -rn | head -15; }
-
-
