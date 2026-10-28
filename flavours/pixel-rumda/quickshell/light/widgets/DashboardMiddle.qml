@@ -24,12 +24,12 @@ Rectangle {
   readonly property int buttonSizes: 51
   readonly property int buttonSpacing: 7
   readonly property int buttonBorderWidth: 0
-  readonly property int pfpSize: 50
-  readonly property int pfpRadius: pfpSize / 2
+  readonly property int displaySize: 52
   readonly property int topMarginOfText: 0
   readonly property int buttonsGapFromBottom: 15
   readonly property int iconSizes: 27
   readonly property int buttonFloatAmount: 6
+  property color clockColor: "#9E6D54"// Colors.indicatorBGColor
 
   color: Colors.dashModulesColor
   border.width: Config.dashInnerModuleBorderWidth
@@ -42,43 +42,14 @@ Rectangle {
 
     Item {
       Layout.fillWidth: true
-      Layout.topMargin: 15
-      Layout.preferredHeight: 60
-
-      Column {
-        anchors.centerIn: parent
-        spacing: 10
-
-        Text {
-          anchors.horizontalCenter: parent.horizontalCenter
-          text: "Hello.."
-          font.family: "Dogica Pixel"
-          color: Colors.accentColor
-          font.pixelSize: 12
-          font.bold: true
-        }
-
-        Text {
-          anchors.horizontalCenter: parent.horizontalCenter
-          text: Config.username
-          font.family: "Dogica Pixel"
-          color: Colors.accentColor
-          font.pixelSize: 16
-          font.bold: true
-        }
-      }
-    }
-
-    Item {
-      Layout.fillWidth: true
       Layout.fillHeight: true
       Layout.topMargin: 10
       Layout.alignment: Qt.AlignCenter
 
       Item {
         anchors.centerIn: parent
-        width: pfpSize + 90
-        height: pfpSize + 40
+        width: displaySize + 90
+        height: displaySize + 140
 
         Rectangle {
           Rectangle {
@@ -92,42 +63,78 @@ Rectangle {
             radius: Config.innerDSRadius
           }
           anchors.centerIn: parent
-          width: pfpSize + 90
-          height: pfpSize + 40
+          width: displaySize + 90
+          height: displaySize + 140
           radius: Config.dashInnerModuleRadius
           color: Colors.dashPFPColor
         }
 
         Rectangle {
           anchors.centerIn: parent
-          width: pfpSize + 70
-          height: pfpSize + 23
+          width: displaySize + 70
+          height: displaySize + 115
           radius: Config.dashInnerModuleRadius
           color: "transparent"
           border.width: 3
           border.color: Colors.dashBorderColor
         }
 
-        ClippingWrapperRectangle {
-          anchors.centerIn: parent
-          radius: Config.dashInnerModuleRadius
-          width: pfpSize + 50
-          height: pfpSize + 3
+        Column {
+          anchors.top: parent.top
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.topMargin: 30
+          spacing: 2
 
-          AnimatedImage {
-            anchors.fill: parent
-            source: Config.gifPath
-            scale: 2.5
-            fillMode: Image.PreserveAspectFit
-            playing: true
-            antialiasing: true
-            mipmap: true
-            smooth: true
+          Text {
+            id: clockText
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: Qt.formatTime(new Date(), "hh:mm")
+            font.pixelSize: 30
+            font.family: "Terminess Nerd Font"
+            font.bold: true
+            color: clockColor
+
+            Timer {
+              interval: 1000
+              running: true
+              repeat: true
+              onTriggered: clockText.text = Qt.formatTime(new Date(), "hh:mm")
+            }
           }
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: Qt.formatDate(new Date(), "dddd")
+            font.pixelSize: 10
+            font.family: "Dogica Pixel"
+            font.bold: true
+            color: clockColor
+          }
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: Qt.formatDate(new Date(), "d MMM yyyy")
+            font.pixelSize: 11
+            font.bold: true
+            font.family: "Terminess Nerd Font"
+            color: clockColor
+          }
+        }
+
+        Image {
+          anchors.bottom: parent.bottom
+          anchors.left: parent.left
+          anchors.bottomMargin: 10
+          anchors.leftMargin: 10
+          width: 70
+          height: 70
+          source: `file://${Config.configPath}/light/icons/hilal.svg`
+          fillMode: Image.PreserveAspectFit
+          antialiasing: true
+          mipmap: true
+          smooth: true
         }
       }
     }
-
     Item {
       Layout.fillWidth: true
       Layout.bottomMargin: -20
@@ -136,6 +143,7 @@ Rectangle {
       DashPlayButtons {
         id: dashPlayButtonsCol
         anchors.centerIn: parent
+        anchors.horizontalCenterOffset: 2
       }
     }
   }

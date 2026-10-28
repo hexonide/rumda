@@ -172,7 +172,7 @@ Scope {
                   Layout.fillHeight: true
                   Layout.preferredWidth: topRow.width * Config.dashProfileColRatio
                 }
-                DashBoardControls {
+                DashboardMiddle {
                   Layout.fillHeight: true
                   Layout.fillWidth: true
                 }
