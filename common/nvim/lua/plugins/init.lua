@@ -12,6 +12,14 @@ return {
       require "configs.lspconfig"
     end,
   },
+  {
+    "ManuLinares/nvim-c3",
+    ft = { "c3", "c3i", "c3t" },
+    build = function()
+      require("c3").update()
+    end, -- (Optional) Auto-update binaries
+    config = true,
+  },
   -- discord presence
   -- {'andweeb/presence.nvim', lazy = false, },
   -- {
@@ -32,6 +40,28 @@ return {
       vim.g.mkdp_filetypes = { "markdown" }
     end,
     ft = { "markdown" },
+  },
+
+  {
+    "m00qek/baleia.nvim",
+    lazy = false,
+    config = function()
+      local baleia = require("baleia").setup {}
+
+      vim.api.nvim_create_user_command("Colorize", function()
+        baleia.once(vim.api.nvim_get_current_buf())
+      end, {})
+
+      vim.api.nvim_create_autocmd({ "BufReadPost", "StdinReadPost" }, {
+        callback = function(args)
+          local lines = vim.api.nvim_buf_get_lines(args.buf, 0, 200, false)
+          if table.concat(lines, "\n"):find "\27%[" then
+            baleia.once(args.buf)
+            vim.bo[args.buf].modified = false
+          end
+        end,
+      })
+    end,
   },
 
   -- {
