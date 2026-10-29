@@ -7,9 +7,9 @@ M.base_30 = {
   one_bg = "#362b22", -- Background for floating windows
   one_bg2 = "#3c312a", -- Background for certain UI elements
   one_bg3 = "#4c4133", -- Background for other UI elements
-  grey = "#756148", -- Line nums
-  grey_fg = "#8a745c", -- (inactive text) < actually comments
-  light_grey = "#807668", -- Lighter grey for subtle text
+  grey = "#947957", -- Line nums
+  grey_fg = "#947957", -- (inactive text) < actually comments
+  light_grey = "#d19e75", -- Lighter grey for subtle text
   red = "#6e241b", -- Error messages, deletions
   baby_pink = "#d89078", -- Lighter pink accent
   pink = "#cf8860", -- Pink accent color
@@ -24,8 +24,8 @@ M.base_30 = {
   cyan = "#9f7f65", -- Cyan accent, special characters
   statusline_bg = "#7a5845",
   lightbg = "#3D2E21",
-  pmenu_bg = "#8f5b3c",  -- Darker
-  folder_bg = "#5a3a25",  -- Darker
+  pmenu_bg = "#8f5b3c", -- Darker
+  folder_bg = "#5a3a25", -- Darker
 }
 M.base_16 = {
   base00 = "#1C1612", -- Default dark background
@@ -46,5 +46,28 @@ M.base_16 = {
   base0F = "#9A4235", -- commas, brackets etc
 }
 M.type = "dark"
-M.polish_hl = {}
+M.polish_hl = {
+  statusline = {
+    St_cwd_icon = { fg = "#7a5845", bg = "#f0bb90" },
+    St_cwd_text = { fg = "#45373c", bg = "#f0bb90" },
+    St_cwd_sep = { fg = "#f0bb90", bg = "#7a5845" },
+    ---------------------------------------------------
+    St_pos_icon = { fg = "#f0bb90", bg = "#7a5845" },
+    St_pos_text = { fg = "#f0bb90", bg = "#7a5845" },
+    St_pos_sep = { fg = "#7a5845", bg = "#f0bb90" },
+    ---------------------------------------------------
+    St_lspError = { fg = "#f57f6e" },
+    St_Lsp = { fg = "#f0bb90" },
+    St_lspWarning = { fg = "#e9c193" },
+  },
+  tbline = {
+    TbFill = { bg = "#7a5845" },
+    TbBufOff = { fg = "#C09B72", bg = "#7a5845" },
+    TbBufOn = { fg = "#f0bb90", bg = "#1c1612" },
+    TbBufOnClose = { fg = "#a23a2b", bg = "#1c1612" },
+    TbBufOffClose = { fg = "#a23a2b", bg = "#7a5845" },
+    TbBufOnModified = { fg = "#a23a2b", bg = "#1c1612" },
+    TbBufOffModified = { fg = "#a23a2b", bg = "#7a5845" },
+  },
+}
 return M

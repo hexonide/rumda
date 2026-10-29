@@ -46,5 +46,25 @@ M.base_16 = {
   base0F = "#9A4235", -- error
 }
 M.type = "light"
-M.polish_hl = {}
+M.polish_hl = {
+  statusline = {
+    St_cwd_icon = { fg = "#cc9b6e", bg = "#e9bc88" },
+    St_cwd_text = { fg = "#45373c", bg = "#e9bc88" },
+    St_cwd_sep = { fg = "#e9bc88", bg = "#cc9b6e" },
+    ---------------------------------------------------
+    St_pos_icon = { fg = "#e9bc88", bg = "#cc9b6e" },
+    St_pos_text = { fg = "#45373c", bg = "#cc9b6e" },
+    St_pos_sep = { fg = "#cc9b6e", bg = "#e9bc88" },
+    ---------------------------------------------------
+    St_lspError = { fg = "#a23a2b" },
+    St_Lsp = { fg = "#45373c" },
+    St_lspWarning = { fg = "#e9c193" },
+  },
+  tbline = {
+    TbBufOnClose = { fg = "#a23a2b" },
+    TbBufOffClose = { fg = "#a23a2b" },
+    TbBufOnModified = { fg = "#a23a2b" },
+    TbBufOffModified = { fg = "#a23a2b" },
+  },
+}
 return M

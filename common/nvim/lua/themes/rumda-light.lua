@@ -14,18 +14,18 @@ M.base_30 = {
   baby_pink = "#a87358",
   pink = "#c47c4f",
   line = "#c9c0ae",
-  green = "#4e2e1f",  -- Darker for insert mode
+  green = "#4e2e1f", -- Darker for insert mode
   vibrant_green = "#3e1e0f",
-  blue = "#5a3a25",  -- Darker for normal mode (was #a1694d)
-  yellow = "#9f7c55",  -- Darker for visual mode
+  blue = "#5a3a25", -- Darker for normal mode (was #a1694d)
+  yellow = "#9f7c55", -- Darker for visual mode
   sun = "#c19b76",
-  purple = "#8f5b3c",  -- Darker
-  orange = "#986649",  -- Darker
+  purple = "#8f5b3c", -- Darker
+  orange = "#986649", -- Darker
   cyan = "#5a3a25",
   statusline_bg = "#e6c0a1",
   lightbg = "#f7d5b7",
-  pmenu_bg = "#8f5b3c",  -- Darker
-  folder_bg = "#5a3a25",  -- Darker
+  pmenu_bg = "#8f5b3c", -- Darker
+  folder_bg = "#5a3a25", -- Darker
 }
 M.base_16 = {
   base00 = "#F5DCC6", -- bg
@@ -46,7 +46,28 @@ M.base_16 = {
   base0F = "#45373C", -- (!?)
 }
 M.type = "light"
-M.polish_hl = {}
-
+M.polish_hl = {
+  statusline = {
+    St_cwd_icon = { fg = "#d6ac89", bg = "#f7d5b7" },
+    St_cwd_text = { fg = "#5a3a25", bg = "#f7d5b7" },
+    St_cwd_sep = { fg = "#f7d5b7", bg = "#e6c0a1" },
+    ---------------------------------------------------
+    St_pos_icon = { fg = "#f5dcc6", bg = "#e6c0a1" },
+    St_pos_text = { fg = "#5a3a25", bg = "#e6c0a1" },
+    St_pos_sep = { fg = "#e6c0a1", bg = "#f7d5b7" },
+    ---------------------------------------------------
+    St_lspError = { fg = "#a23a2b" },
+    St_Lsp = { fg = "#5a3a25" },
+    St_lspWarning = { fg = "#b56d62" },
+  },
+  tbline = {
+    TbBufOff = { fg = "#C09B72", bg = "#f7d5b7" },
+    TbBufOn = { fg = "#5a3a25", bg = "#f5dcc6" }, 
+    TbBufOnClose = { fg = "#a23a2b", bg = "#f5dcc6" },
+    TbBufOffClose = { fg = "#a23a2b", bg = "#f7d5b7" },
+    TbBufOnModified = { fg = "#a23a2b", bg = "#f5dcc6" },
+    TbBufOffModified = { fg = "#a23a2b", bg = "#f7d5b7" },
+  },
+}
 
 return M
