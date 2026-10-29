@@ -116,7 +116,7 @@ vim.keymap.set(
 vim.keymap.set("n", "<leader>tn", ":set relativenumber!<CR>", { desc = "Toggle relative numbers on lines" })
 vim.opt.number = true -- Show absolute line number on current line
 vim.opt.relativenumber = false -- show relative nums for other lines
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 0
 
 vim.keymap.set("n", "]h", function() require("gitsigns").next_hunk() end, { desc = "Next Git hunk" })
 vim.keymap.set("n", "[h", function() require("gitsigns").prev_hunk() end, { desc = "Previous Git hunk" })
@@ -200,3 +200,43 @@ require "nvchad.autocmds"
 vim.schedule(function()
   require "mappings"
 end)
+
+local reload_pending = false
+
+local function reload_theme()
+  for name in pairs(package.loaded) do
+    if name:match "^themes%." or name == "chadrc" or name == "nvconfig" then
+      package.loaded[name] = nil
+    end
+  end
+  require("base46").load_all_highlights()
+  vim.cmd "redraw!"
+end
+
+local function queue_reload()
+  if reload_pending then
+    return
+  end
+  reload_pending = true
+  vim.defer_fn(function()
+    reload_pending = false
+    reload_theme()
+  end, 150)
+end
+
+local function watch(dir, accept)
+  local handle = vim.uv.new_fs_event()
+  if not handle then
+    return
+  end
+  handle:start(dir, {}, function(err, filename)
+    if err or not filename or not accept(filename) then
+      return
+    end
+    vim.schedule(queue_reload)
+  end)
+end
+
+local config_dir = vim.fn.stdpath "config" .. "/lua"
+watch(config_dir .. "/themes", function(name) return name:match "%.lua$" ~= nil end)
+watch(config_dir, function(name) return name == "chadrc.lua" end)
