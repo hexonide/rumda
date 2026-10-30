@@ -48,10 +48,16 @@ Rectangle {
     }
   }
 
+
   Process {
     id: notifProcess
-    command: ["notify-send", "-i", Config.profilePath, Qt.formatDateTime(new Date(), "dddd, d MMMM yyyy"), Qt.formatDateTime(new Date(), "hh:mm AP")]
     running: false
+  }
+
+  function notifyNow() {
+    const now = new Date();
+    notifProcess.command = ["notify-send", "-i", Config.profilePath, Qt.formatDateTime(now, "dddd, d MMMM yyyy"), Qt.formatDateTime(now, "hh:mm AP")];
+    notifProcess.running = true;
   }
 
   Loader {
@@ -109,6 +115,6 @@ Rectangle {
     hoverEnabled: true
     onEntered: root.expanded = !root.expanded
     onExited: root.expanded = !root.expanded
-    onClicked: notifProcess.running = true
+    onClicked: root.notifyNow()
   }
 }

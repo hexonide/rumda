@@ -133,7 +133,8 @@ Scope {
         Image {
           visible: Config.showArt1
           Layout.fillWidth: true
-          Layout.bottomMargin: 10
+          Layout.bottomMargin: 70
+          Layout.topMargin: 30
           Layout.leftMargin: 0
           Layout.rightMargin: 0
           source: `file://${Config.configPath}/../12.svg`
