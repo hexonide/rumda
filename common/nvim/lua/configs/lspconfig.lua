@@ -72,7 +72,7 @@ vim.lsp.config("rust_analyzer", {
 })
 vim.lsp.enable "rust_analyzer"
 
--- LSP Keybindings (when LSP attaches to buffer)
+-- LSP Keybinds
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local opts = { buffer = args.buf, noremap = true, silent = true }
