@@ -205,3 +205,6 @@ And lastly, something to setup the custom discord theme.
 
 
 [☕ Support this project](https://paypal.me/0xAmmen)
+
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G8N029S3ZS)
