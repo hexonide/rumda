@@ -143,7 +143,6 @@ And lastly, something to setup the custom discord theme.
 | `$mainMod + D`               | Maximize window             |
 | `$mainMod + Shift + C`       | Color picker                |
 | `Ctrl + Alt + R`             | Start OBS recording         |
-| `$mainMod + Q`               | rofi + random arabic poetry |
 |**note:**                     | mainmod =      `Super`      |
 
 
