@@ -45,8 +45,16 @@ M.base_16 = {
   base0E = "#a1694d", -- purple (keywords)
   base0F = "#45373C", -- (!?)
 }
+
+local heading_groups = {}
+for i = 1, 6 do
+  heading_groups["RenderMarkdownH" .. i .. "Bg"] = { bg = M.base_16.base02 }
+  heading_groups["RenderMarkdownH" .. i] = { fg = M.base_30.white, bold = true }
+end
+
 M.type = "light"
 M.polish_hl = {
+  defaults = heading_groups,
   statusline = {
     St_cwd_icon = { fg = "#d6ac89", bg = "#f7d5b7" },
     St_cwd_text = { fg = "#5a3a25", bg = "#f7d5b7" },

@@ -1,6 +1,8 @@
 -- Keybinds:
 
 vim.api.nvim_set_keymap("n", "<M-h>", ":vsplit | terminal<CR> | resize 50%<CR>", { noremap = true, silent = true })
+-- paste w/o replace
+vim.keymap.set("x", "<C-p>", "P", { desc = "Paste over selection without overwriting register" })
 
 -- macro for the double loop
 vim.cmd [[
@@ -172,3 +174,18 @@ vim.keymap.set("n", "<Leader>td", function()
   apply_diagnostic_mode()
   vim.notify("Diagnostics: " .. diagnostic_modes[diagnostic_index].name)
 end, { desc = "Cycle diagnostic visibility" })
+
+-- select inline comment
+vim.keymap.set("n", "<Leader>gs", function()
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  local line = vim.fn.getline(row)
+  local start = comment_start(row - 1, line)
+  if not start then
+    return
+  end
+  local trimmed = line:gsub("%s+$", "")
+  vim.api.nvim_win_set_cursor(0, { row, start })
+  vim.cmd "normal! v"
+  vim.api.nvim_win_set_cursor(0, { row, #trimmed - 1 })
+end, { desc = "Select inline comment" })
+

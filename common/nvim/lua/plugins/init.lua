@@ -42,6 +42,55 @@ return {
   },
 
   {
+    "lukas-reineke/indent-blankline.nvim",
+    opts = {
+      scope = {
+        show_start = false,
+        show_end = false,
+      },
+    },
+    init = function()
+      local shown = false
+      vim.api.nvim_create_user_command("ScopeUnderline", function()
+        shown = not shown
+        require("ibl").update { scope = { show_start = shown, show_end = shown } }
+        vim.notify("Scope underline " .. (shown and "on" or "off"))
+      end, {})
+    end,
+  },
+  {
+    "tadmccorkle/markdown.nvim",
+    ft = "markdown",
+    opts = {
+      mappings = false,
+      on_attach = function(bufnr)
+        local map = vim.keymap.set
+        map("n", "<Leader>wt", "<Cmd>MDToc<CR>", { buffer = bufnr, desc = "Show table of contents" })
+        map("n", "<Leader>wT", "<Cmd>MDTocAll<CR>", { buffer = bufnr, desc = "Show full table of contents" })
+        map("n", "<Leader>wi", "<Cmd>MDInsertToc<CR>", { buffer = bufnr, desc = "Insert table of contents" })
+      end,
+    },
+  },
+  {
+    "AckslD/nvim-FeMaco.lua",
+    main = "femaco",
+    cmd = "FeMaco",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      float_opts = function(code_block)
+        return {
+          relative = "editor",
+          width = 100,
+          height = math.max(5, #code_block.lines + 2),
+          row = 3,
+          col = 10,
+          style = "minimal",
+          border = "single",
+        }
+      end,
+    },
+  },
+  {
     "m00qek/baleia.nvim",
     lazy = false,
     config = function()
@@ -146,6 +195,8 @@ return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
+    ft = "markdown",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
     ---@module 'render-markdown'

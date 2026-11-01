@@ -45,8 +45,16 @@ M.base_16 = {
   base0E = "#F7B292", -- Purple (keywords)
   base0F = "#9A4235", -- commas, brackets etc
 }
+
+local heading_groups = {}
+for i = 1, 6 do
+  heading_groups["RenderMarkdownH" .. i .. "Bg"] = { bg = M.base_16.base02 }
+  heading_groups["RenderMarkdownH" .. i] = { fg = M.base_30.white, bold = true }
+end
+
 M.type = "dark"
 M.polish_hl = {
+  defaults = heading_groups,
   statusline = {
     St_cwd_icon = { fg = "#7a5845", bg = "#f0bb90" },
     St_cwd_text = { fg = "#45373c", bg = "#f0bb90" },
@@ -70,4 +78,5 @@ M.polish_hl = {
     TbBufOffModified = { fg = "#a23a2b", bg = "#7a5845" },
   },
 }
+
 return M
