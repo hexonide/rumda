@@ -1,34 +1,34 @@
 local M = {}
 M.base_30 = {
-  white = "#1a1410",
-  darker_black = "#dab68f",
-  black = "#f0c997", -- bar bg color
-  black2 = "#cc9b6e",
-  one_bg = "#d7b184",
-  one_bg2 = "#f2bc88",
-  one_bg3 = "#c79f7a",
-  grey = "#dba380",
-  grey_fg = "#c98d67",
-  light_grey = "#8f5b3e",
-  red = "#9A4235",
-  baby_pink = "#a87358",
-  pink = "#c47c4f",
-  line = "#d7b184",
-  green = "#5e3b29",
+  white         = "#1a1410",
+  darker_black  = "#dab68f",
+  black         = "#f0c997",
+  black2        = "#cc9b6e",
+  one_bg        = "#d7b184",
+  one_bg2       = "#f2bc88",
+  one_bg3       = "#c79f7a",
+  grey          = "#dba380",
+  grey_fg       = "#c98d67",
+  light_grey    = "#8f5b3e",
+  red           = "#9A4235",
+  baby_pink     = "#a87358",
+  pink          = "#c47c4f",
+  line          = "#d7b184",
+  green         = "#5e3b29",
   vibrant_green = "#4e2e1f",
-  blue = "#a1694d",
-  yellow = "#A87358",
-  sun = "#e0b48b",
-  purple = "#c47c4f",
-  orange = "#a87358",
-  cyan = "#a1694d",
+  blue          = "#a1694d",
+  yellow        = "#A87358",
+  sun           = "#e0b48b",
+  purple        = "#c47c4f",
+  orange        = "#a87358",
+  cyan          = "#a1694d",
   statusline_bg = "#cc9b6e",
-  lightbg = "#e0b48b",
-  pmenu_bg = "#c47c4f",
-  folder_bg = "#a1694d",
+  lightbg       = "#e0b48b",
+  pmenu_bg      = "#c47c4f",
+  folder_bg     = "#a1694d",
 }
 M.base_16 = {
-  base00 = "#f0c997", -- bg
+  base00 = "#f0c997",
   base01 = "#d7b184",
   base02 = "#e0b690",
   base03 = "#9e4234",
@@ -36,14 +36,14 @@ M.base_16 = {
   base05 = "#ab4637",
   base06 = "#2a1d16",
   base07 = "#1a1410",
-  base08 = "#9A4235", -- red (errors, variables)
-  base09 = "#a87358", -- orange (numbers)
-  base0A = "#5e3b29", -- yellow (classes)
-  base0B = "#447028", -- green (strings)
-  base0C = "#a1694d", -- cyan (support)
-  base0D = "#426A79", -- blue (functions)
-  base0E = "#a1694d", -- purple (keywords)
-  base0F = "#9A4235", -- error
+  base08 = "#9A4235",
+  base09 = "#a87358",
+  base0A = "#5e3b29",
+  base0B = "#447028",
+  base0C = "#a1694d",
+  base0D = "#426A79",
+  base0E = "#a1694d",
+  base0F = "#9A4235",
 }
 
 local heading_groups = {}
@@ -56,23 +56,23 @@ M.type = "light"
 M.polish_hl = {
   defaults = heading_groups,
   statusline = {
-    St_cwd_icon = { fg = "#cc9b6e", bg = "#e9bc88" },
-    St_cwd_text = { fg = "#45373c", bg = "#e9bc88" },
-    St_cwd_sep = { fg = "#e9bc88", bg = "#cc9b6e" },
+    St_cwd_icon      = { fg = "#cc9b6e", bg = "#e9bc88" },
+    St_cwd_text      = { fg = "#45373c", bg = "#e9bc88" },
+    St_cwd_sep       = { fg = "#e9bc88", bg = "#cc9b6e" },
     ---------------------------------------------------
-    St_pos_icon = { fg = "#e9bc88", bg = "#cc9b6e" },
-    St_pos_text = { fg = "#45373c", bg = "#cc9b6e" },
-    St_pos_sep = { fg = "#cc9b6e", bg = "#e9bc88" },
+    St_pos_icon      = { fg = "#e9bc88", bg = "#cc9b6e" },
+    St_pos_text      = { fg = "#45373c", bg = "#cc9b6e" },
+    St_pos_sep       = { fg = "#cc9b6e", bg = "#e9bc88" },
     ---------------------------------------------------
-    St_lspError = { fg = "#a23a2b" },
-    St_Lsp = { fg = "#45373c" },
-    St_lspWarning = { fg = "#e9c193" },
+    St_lspError      = { fg = "#a23a2b" },
+    St_Lsp           = { fg = "#45373c" },
+    St_lspWarning    = { fg = "#e9c193" },
   },
   tbline = {
-    TbBufOnClose = { fg = "#a23a2b" },
-    TbBufOffClose = { fg = "#a23a2b" },
-    TbBufOnModified = { fg = "#a23a2b" },
-    TbBufOffModified = { fg = "#a23a2b" },
+    TbBufOnClose     = { fg = "#bb2611" },
+    TbBufOnModified  = { fg = "#a23a2b" },
+    TbBufOffClose    = { fg = "#8d493f" },
+    TbBufOffModified = { fg = "#8d493f" },
   },
 }
 

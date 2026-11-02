@@ -191,7 +191,14 @@ return {
       -- require('neoscroll.config').set_mappings(t)
     end,
   },
-
+  {
+    "nvim-mini/mini.align",
+    version = false,
+    event = "VeryLazy",
+    config = function()
+      require("mini.align").setup()
+    end,
+  },
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
