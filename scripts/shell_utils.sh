@@ -43,6 +43,7 @@ alias bngcat='./Downloads/wayland-bongocat/build/bongocat --watch-config --confi
 alias borderson='hyprctl plugin load /home/hexogen/d-velopment/copy-dir/bordersplusplus/borders-plus-plus/libandalus.so'
 alias bordersoff='hyprctl plugin unload /home/hexogen/d-velopment/copy-dir/bordersplusplus/borders-plus-plus/libandalus.so'
 alias htbdl='~/d-velopment/scripts/htbdl.sh'
+alias ptimes='~/d-velopment/scripts/prayer_times.sh'
 alias mkc-devel='/home/hexogen/d-velopment/makc/tests/mkc'
 alias mkc-debug='/home/hexogen/d-velopment/makc/tests/mkc-asan'
 alias grp-extensions='~/d-velopment/scripts/group_extensions.sh'
