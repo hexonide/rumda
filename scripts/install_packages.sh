@@ -20,6 +20,7 @@ PACKAGES=(
     qt5-qtgraphicaleffects
     qt6-qt5compat
     rofi
+    rofimoji
     kitty
     alacritty
     zathura

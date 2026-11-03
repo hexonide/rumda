@@ -111,7 +111,7 @@ window {
     anchor:                      center;
     fullscreen:                  false;
     width:                       20%;
-    height:                      30%;
+    height:                      32%;
     x-offset:                    0px;
     y-offset:                    0px;
     enabled:                     true;
