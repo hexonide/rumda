@@ -16,23 +16,23 @@
 
 set selection-clipboard clipboard
 
+set highlight-color "#e6c0a1aa"
+
 set statusbar-fg                "#553A2F"
 set statusbar-bg                "#f0bb90"
 
 set inputbar-bg                 "#f0bb90"
 set inputbar-fg                 "#553A2F"
 
-set highlight-color             "#dba380"
-set highlight-active-color      "#f2bc88"
+set highlight-active-color      "#e6c0a188"
+set highlight-color "#e6c0a188"
 
-# set default-bg "#F5DCC6"
-# set recolor-lightcolor          "#f5dcc6"
-
+set default-bg "#F5DCC6"
+set recolor-lightcolor          "#f5dcc6"
 # set default-bg "#f5c7a2"
 # set recolor-lightcolor          "#f5c7a2"
-
-set recolor-lightcolor          "#f0c997"
-set default-bg "#f0c997"
+# set default-bg "#f0c997"
+# set recolor-lightcolor          "#f0c997"
 
 set default-fg "#4e2e1f"
 set recolor-darkcolor           "#4e2e1f"
