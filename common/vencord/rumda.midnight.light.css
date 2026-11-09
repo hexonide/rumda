@@ -22,7 +22,7 @@ body {
     /* sizes */
     --gap: 12px; /* spacing between panels */
     --divider-thickness: 4px; /* thickness of unread messages divider and highlighted message borders */
-    --border-thickness: 3px; /* thickness of borders around main panels. DOES NOT AFFECT OTHER BORDERS */
+    --border-thickness: 0px; /* thickness of borders around main panels. DOES NOT AFFECT OTHER BORDERS */
 
     /* animation/transition options */
     --animations: on; /* off: disable animations/transitions, on: enable animations/transitions */
@@ -120,10 +120,146 @@ body {
     --button-border: #F2BC88; /* neutral border color of buttons */
 }
 
-/**/
-/* *, */
-/* *::before, */
-/* *::after { */
-/*     border-radius: 0 !important; */
-/* } */
-/**/
+
+*,
+*::before,
+*::after {
+    border-radius: 0 !important;
+}
+
+
+pre code,
+code.hljs,
+code.hljs * {
+    font-family: 'Terminess Nerd Font', monospace !important;
+    font-weight: bold !important;
+}
+
+pre code.hljs,
+code.hljs {
+    background: #f0d4bb !important;
+    color: #9A4235 !important;
+}
+
+code.hljs a-k {
+    color: #a1694d !important;
+}
+
+code.hljs a-p {
+    color: #45373C !important;
+}
+
+code.hljs a-at {
+    color: #c4835a !important;
+}
+
+code.hljs a-f {
+    color: #426A79 !important;
+}
+
+code.hljs a-s {
+    color: #447028 !important;
+}
+
+code.hljs a-t {
+    color: #c4835a !important;
+}
+
+code.hljs a-cr {
+    color: #8f5b3c !important;
+}
+
+code.hljs a-o {
+    color: #9A4235 !important;
+}
+
+code.hljs a-m {
+    color: #ab4637 !important;
+}
+
+code.hljs a-v {
+    color: #ab4637 !important;
+}
+
+code.hljs a-c {
+    color: #9e4234 !important;
+}
+
+code.hljs a-n {
+    color: #8f5b3c !important;
+}
+
+code.hljs a-co {
+    color: #8f5b3c !important;
+}
+
+code.hljs a-pr {
+    color: #ab4637 !important;
+}
+
+[class*="codeLine_"] {
+    color: #9A4235 !important;
+}
+
+[class*="codeLine_"] [class^="a-k_"] {
+    color: #a1694d !important;
+}
+
+[class*="codeLine_"] [class^="a-p_"] {
+    color: #45373C !important;
+}
+
+[class*="codeLine_"] [class^="a-at_"] {
+    color: #c4835a !important;
+}
+
+[class*="codeLine_"] [class^="a-f_"] {
+    color: #426A79 !important;
+}
+
+[class*="codeLine_"] [class^="a-s_"] {
+    color: #447028 !important;
+}
+
+[class*="codeLine_"] [class^="a-t_"] {
+    color: #c4835a !important;
+}
+
+[class*="codeLine_"] [class^="a-cr_"] {
+    color: #8f5b3c !important;
+}
+
+[class*="codeLine_"] [class^="a-co_"] {
+    color: #8f5b3c !important;
+}
+
+[class*="codeLine_"] [class^="a-o_"] {
+    color: #9A4235 !important;
+}
+
+[class*="codeLine_"] [class^="a-m_"] {
+    color: #ab4637 !important;
+}
+
+[class*="codeLine_"] [class^="a-v_"] {
+    color: #ab4637 !important;
+}
+
+[class*="codeLine_"] [class^="a-pr_"] {
+    color: #ab4637 !important;
+}
+
+[class*="codeLine_"] [class^="a-c_"] {
+    color: #9e4234 !important;
+}
+
+[class*="codeLine_"] [class^="a-n_"] {
+    color: #8f5b3c !important;
+}
+
+[class*="codeLine_"],
+[class*="codeLine_"] * {
+    font-family: 'Terminess Nerd Font', monospace !important;
+    font-weight: bold !important;
+    font-size: 16px;
+}
