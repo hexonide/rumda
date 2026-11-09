@@ -63,12 +63,12 @@ M.ui = {
         local mode_data = stl.modes[m] or stl.modes["n"]
         local mode_hl = "%#St_" .. mode_data[2] .. "Mode#"
         local mode_icons = {
-          n = " 🙤  Normal", -- Normal
-          i = " 🙛  Insert", -- Insert
+          n = " 🙛  Normal", -- Normal
+          i = " 🙵  Insert", -- Insert
           v = " ⌘  Visual", -- Visual
           V = " ♣ v-line", -- Visual Line
           [""] = " λ v-block", -- Visual Block (Ctrl-V)
-          c = " 🙵   Command", -- Command
+          c = " 🙤  Command", -- Command
           R = " ☢  Replace", -- Replace
           t = " Σ Terminal", -- Terminal
         }

@@ -67,6 +67,8 @@ M.polish_hl = {
     St_lspError      = { fg = "#a23a2b" },
     St_Lsp           = { fg = "#5a3a25" },
     St_lspWarning    = { fg = "#b56d62" },
+    St_NormalMode = { fg = "#f5dcc6", bg = "#4e2e1f" },
+    St_InsertMode = { fg = "#f5dcc6", bg = "#4e2e1f" },
   },
   tbline = {
     TbFill           = { bg = "#f7d5b7" },

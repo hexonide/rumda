@@ -257,6 +257,7 @@ return {
     opts = {
       default = {
         dir_path = "/home/hexogen/Pictures/assets",
+        use_absolute_path = true,
         relative_to_current_file = false,
         prompt_for_file_name = false,
         file_name = "%Y%m%d-%H%M%S",
@@ -275,6 +276,24 @@ return {
     },
   },
 
+  {
+    "mfussenegger/nvim-jdtls",
+    ft = "java",
+    config = function()
+      local function start()
+        local root = vim.fs.root(0, { "pom.xml", "build.gradle", "build.gradle.kts", "mvnw", "gradlew", ".git" })
+          or vim.fn.getcwd()
+        local workspace = vim.fn.stdpath "data" .. "/jdtls-workspace/" .. vim.fn.fnamemodify(root, ":t")
+        require("jdtls").start_or_attach {
+          cmd = { vim.fn.stdpath "data" .. "/mason/bin/jdtls", "-data", workspace },
+          root_dir = root,
+          capabilities = require("cmp_nvim_lsp").default_capabilities(),
+        }
+      end
+      start()
+      vim.api.nvim_create_autocmd("FileType", { pattern = "java", callback = start })
+    end,
+  },
   {
     "jake-stewart/multicursor.nvim",
     branch = "1.0",

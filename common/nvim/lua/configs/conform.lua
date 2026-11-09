@@ -4,6 +4,7 @@ local options = {
     -- css = { "prettier" },
     -- html = { "prettier" },
     qml = { "qmlformat" },
+    java = { "google-java-format" },
   },
   formatters = {
     qmlformat = {
