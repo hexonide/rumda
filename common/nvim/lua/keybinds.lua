@@ -41,6 +41,40 @@ vim.keymap.set(
   { desc = "Wrap in <details> (selection is collapsed)" }
 )
 
+--Markdown list reference construction
+local function list_item_text(lnum)
+  local line = vim.fn.getline(lnum)
+  return line:match "^%s*[%*%-%+]%s+(.-)%s*$" or line:match "^%s*%d+[.)]%s+(.-)%s*$"
+end
+
+vim.keymap.set("n", "yc", function()
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  local current = list_item_text(row)
+  if not current then
+    return
+  end
+  local parts = { current }
+  local level = vim.fn.indent(row)
+  for lnum = row - 1, 1, -1 do
+    if level == 0 then
+      break
+    end
+    local text = list_item_text(lnum)
+    if text then
+      local indent = vim.fn.indent(lnum)
+      if indent < level then
+        table.insert(parts, 1, text)
+        level = indent
+      end
+    end
+  end
+  local result = table.concat(parts, "::")
+  vim.fn.setreg('"', result)
+  vim.fn.setreg("+", result)
+  vim.notify(result)
+end, { desc = "Copy list item path" })
+
+
 -- CURSOR AND SCROLLING STUFF
 vim.keymap.set("n", "<leader>tn", ":set relativenumber!<CR>", { desc = "Toggle relative numbers on lines" })
 vim.opt.number = true -- Show absolute line number on current line

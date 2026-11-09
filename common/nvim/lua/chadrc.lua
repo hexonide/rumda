@@ -6,12 +6,23 @@
 local M = {}
 
 M.base46 = {
-  theme = "rumda-light",
-  theme_toggle = { "rumda-light", "rumda-light" },
+  theme = "rumda-cinnamon",
+  theme_toggle = { "rumda-cinnamon", "rumda-cinnamon" },
   hl_override = {
     -- NvimTreeWinSeparator = { fg = "statusline_bg", bg = "darker_black" },
     -- Comment = { italic = true },
     -- ["@comment"] = { italic = true },
+  },
+}
+
+M.nvdash = {
+  load_on_startup = true,
+  header = {
+    [[            ]],
+    [[    ╱|、    ]],
+    [[  (`  - 7    ]],
+    [[   じしˍ,)ノ]],
+    [[            ]],
   },
 }
 
