@@ -65,8 +65,8 @@ source ~/.config/rumda/scripts/shell_utils.sh
 # see 'man strftime' for details.
 HIST_STAMPS="dd/mm/yyyy"
 HISTFILE=~/.zsh_history
-HISTSIZE=100000000000
-SAVEHIST=100000000000
+HISTSIZE=999999999999999999
+SAVEHIST=999999999999999999
 setopt SHARE_HISTORY
 
 # Would you like to use another custom folder than $ZSH/custom?
