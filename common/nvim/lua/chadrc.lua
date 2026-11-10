@@ -6,8 +6,8 @@
 local M = {}
 
 M.base46 = {
-  theme = "rumda-cinnamon",
-  theme_toggle = { "rumda-cinnamon", "rumda-cinnamon" },
+  theme = "rumda-light",
+  theme_toggle = { "rumda-light", "rumda-light" },
   hl_override = {
     -- NvimTreeWinSeparator = { fg = "statusline_bg", bg = "darker_black" },
     -- Comment = { italic = true },

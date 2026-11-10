@@ -266,7 +266,7 @@ export PATH="$HOME/.cargo/bin/:$HOME/.local/bin/:$PATH"
 # . "$HOME/.local/bin/env"
 
 # bun completions
-[ -s "/home/hexogen/.bun/_bun" ] && source "/home/hexogen/.bun/_bun"
+[ -s "/home/$USER/.bun/_bun" ] && source "/home/$USER/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

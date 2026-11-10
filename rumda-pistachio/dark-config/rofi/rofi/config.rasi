@@ -95,7 +95,7 @@ configuration {
 //     /* Backgroud Colors */
 //     background-color:            @background-colour;
 //     /* Backgroud Image */
-//     // background-image:          url("/home/hexogen/.config/rumda/rofi/p1.png", none);
+//     // background-image:          url("/home/$USER/.config/rumda/rofi/p1.png", none);
 //     /* Simple Linear Gradient */
 //     //background-image:          linear-gradient(red, orange, pink, purple);
 //     /* Directional Linear Gradient */

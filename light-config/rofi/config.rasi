@@ -159,7 +159,7 @@ imagebox {
 //     margin:                      0px;
 //     border:                      0px solid;
 //     background-color:            transparent;
-//     background-image:            url("/home/hexogen/d-velopment/scripts/bg.svg", width);
+//     background-image:            url("/home/$USER/d-velopment/scripts/bg.svg", width);
 //     text-color:                  transparent;
 //     orientation:                 vertical;
 // }

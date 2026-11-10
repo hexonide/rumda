@@ -256,7 +256,7 @@ return {
     event = "VeryLazy",
     opts = {
       default = {
-        dir_path = "/home/hexogen/Pictures/assets",
+        dir_path = "/home/$USER/Pictures/assets",
         use_absolute_path = true,
         relative_to_current_file = false,
         prompt_for_file_name = false,

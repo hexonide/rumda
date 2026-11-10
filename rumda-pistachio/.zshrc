@@ -222,7 +222,6 @@ alias cb='cargo build'
 alias cr='cargo run'
 alias cargo-generate-flamelens='cargo flamegraph --post-process "flamelens --echo"'
 alias temp='echo "CPU Temp: $(sensors | awk '\''/Tctl/ {print $2}'\'')" | sed "s/+/\x1b[31m+/;s/°C/°C\x1b[0m/"'
-alias rumda='Hyprland --config /home/hexogen/.config/rumda-pistachio/hyprland.conf'
 alias rumdafetch='neofetch --source /home/$USER/.config/rumda-pistachio/neofetch/2.svg --kitty --size 230'
 alias wall='/$HOME/.config/rumda-pistachio/scripts/wall.sh'
 alias hyprtheme='/$HOME/.config/rumda-pistachio/scripts/hyprtheme.sh'
@@ -274,7 +273,7 @@ export RUSTC_WRAPPER=sccache
 . "$HOME/.local/bin/env"
 
 # bun completions
-[ -s "/home/hexogen/.bun/_bun" ] && source "/home/hexogen/.bun/_bun"
+[ -s "/home/$USER/.bun/_bun" ] && source "/home/$USER/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
