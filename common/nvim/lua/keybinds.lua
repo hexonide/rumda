@@ -41,19 +41,181 @@ vim.keymap.set(
   { desc = "Wrap in <details> (selection is collapsed)" }
 )
 
---Markdown list reference construction
+-- markdown list reference construction / searching
 local function list_item_text(lnum)
   local line = vim.fn.getline(lnum)
   return line:match "^%s*[%*%-%+]%s+(.-)%s*$" or line:match "^%s*%d+[.)]%s+(.-)%s*$"
 end
 
+local function buf_indent(buf, line)
+  local ws = line:match "^%s*"
+  local width = 0
+  local tab = vim.bo[buf].tabstop
+  for ch in ws:gmatch "." do
+    if ch == "\t" then
+      width = width + tab - (width % tab)
+    else
+      width = width + 1
+    end
+  end
+  return width
+end
+
+local function item_of_line(line)
+  return line:match "^%s*[%*%-%+]%s+(.-)%s*$" or line:match "^%s*%d+[.)]%s+(.-)%s*$"
+end
+
+local function scope_at_cursor()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+  local init = 1
+  while true do
+    local s, e = line:find("[%w_%-]+::[%w_%-:]*[%w_%-]", init)
+    if not s then
+      return nil
+    end
+    local tail_end = e
+    if line:sub(e + 1, e + 1):match "%s" and item_of_line(line) then
+      tail_end = #line:gsub("%s+$", "")
+    end
+    if col >= s and col <= tail_end then
+      local segments = {}
+      local starts = {}
+      local chosen
+      local pos = s
+      for seg in line:sub(s, e):gmatch "[^:]+" do
+        table.insert(segments, seg)
+        table.insert(starts, pos)
+        if not chosen and col <= pos + #seg + 1 then
+          chosen = #segments
+        end
+        pos = pos + #seg + 2
+      end
+      chosen = chosen or #segments
+      local candidates = {}
+      if chosen == #segments then
+        local words = vim.split(vim.trim(line:sub(starts[#starts])), "%s+")
+        for n = #words, 1, -1 do
+          table.insert(candidates, table.concat(words, " ", 1, n))
+        end
+      end
+      local trimmed = {}
+      for k = 1, chosen do
+        trimmed[k] = segments[k]
+      end
+      return trimmed, chosen == #segments, candidates
+    end
+    init = e + 1
+  end
+end
+
+local function find_scope(buf, segments, prefix_last)
+  local stack = {}
+  local fenced = false
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  for lnum, line in ipairs(lines) do
+    if line:match "^%s*```" or line:match "^%s*~~~" then
+      fenced = not fenced
+    elseif not fenced then
+      local text = item_of_line(line)
+      if text then
+        local indent = buf_indent(buf, line)
+        while #stack > 0 and stack[#stack].indent >= indent do
+          table.remove(stack)
+        end
+        table.insert(stack, { indent = indent, text = (text:gsub("%s+", "_")), raw = text })
+        if #stack >= #segments then
+          local ok = true
+          for k = 1, #segments do
+            local entry = stack[#stack - #segments + k]
+            local want = segments[k]
+            if k == #segments then
+              if prefix_last then
+                ok = entry.raw:sub(1, #want) == want
+              else
+                ok = entry.raw == want
+              end
+            else
+              ok = entry.text == want
+            end
+            if not ok then
+              break
+            end
+          end
+          if ok then
+            return lnum
+          end
+        end
+      end
+    end
+  end
+end
+
+local function search_buffers(segments, prefix_last)
+  local current = vim.api.nvim_get_current_buf()
+  local order = { current }
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if buf ~= current and vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+      table.insert(order, buf)
+    end
+  end
+  for _, buf in ipairs(order) do
+    local lnum = find_scope(buf, segments, prefix_last)
+    if lnum then
+      return buf, lnum
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function(args)
+    vim.keymap.set("n", "gd", function()
+      local segments, is_last, candidates = scope_at_cursor()
+      if not segments then
+        vim.cmd "normal! gd"
+        return
+      end
+      local buf, lnum
+      if is_last then
+        local probe = vim.deepcopy(segments)
+        for _, cand in ipairs(candidates) do
+          probe[#probe] = cand
+          buf, lnum = search_buffers(probe, false)
+          if buf then
+            break
+          end
+        end
+        if not buf then
+          probe[#probe] = candidates[#candidates]
+          buf, lnum = search_buffers(probe, true)
+        end
+      else
+        buf, lnum = search_buffers(segments, false)
+      end
+      if not buf then
+        vim.notify("Scope not found: " .. table.concat(segments, "::"), vim.log.levels.WARN)
+        return
+      end
+      vim.cmd "normal! m'"
+      if buf ~= vim.api.nvim_get_current_buf() then
+        vim.api.nvim_set_current_buf(buf)
+      end
+      local line = vim.api.nvim_buf_get_lines(buf, lnum - 1, lnum, false)[1]
+      vim.api.nvim_win_set_cursor(0, { lnum, line:find "%S" - 1 })
+      vim.cmd "normal! zvzz"
+    end, { buffer = args.buf, desc = "Jump to list item for scope" })
+  end,
+})
+
+-- copy list item as a construct 
 vim.keymap.set("n", "yc", function()
   local row = vim.api.nvim_win_get_cursor(0)[1]
   local current = list_item_text(row)
   if not current then
     return
   end
-  local parts = { current }
+  local parts = {}
   local level = vim.fn.indent(row)
   for lnum = row - 1, 1, -1 do
     if level == 0 then
@@ -63,11 +225,12 @@ vim.keymap.set("n", "yc", function()
     if text then
       local indent = vim.fn.indent(lnum)
       if indent < level then
-        table.insert(parts, 1, text)
+        table.insert(parts, 1, (text:gsub("%s+", "_")))
         level = indent
       end
     end
   end
+  table.insert(parts, current)
   local result = table.concat(parts, "::")
   vim.fn.setreg('"', result)
   vim.fn.setreg("+", result)
@@ -77,9 +240,6 @@ end, { desc = "Copy list item path" })
 
 -- CURSOR AND SCROLLING STUFF
 vim.keymap.set("n", "<leader>tn", ":set relativenumber!<CR>", { desc = "Toggle relative numbers on lines" })
-vim.opt.number = true -- Show absolute line number on current line
-vim.opt.relativenumber = false -- show relative nums for other lines
-vim.opt.scrolloff = 0
 
 -- git hunks
 vim.keymap.set("n", "]h", function()

@@ -7,6 +7,10 @@ require "nvchad.options"
 -- vim.opt.guicursor = "n-v-c:block-Cursor,i-ci-ve:ver10-iCursor,r-cr-o:ver20-rCursor,a:blinkwait700-blinkoff400-blinkon250"
 -- vim.opt.arabicshape = false
 
+vim.opt.number = true -- Show absolute line number on current line
+vim.opt.relativenumber = false -- show relative nums for other lines
+vim.opt.scrolloff = 0
+
 
 
 -- highlights stuff like `root::median::item` differently in markdown
