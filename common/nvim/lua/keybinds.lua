@@ -25,18 +25,34 @@ vim.keymap.set("v", '<Leader>w"', 'c"<C-r>""<Esc>', { desc = 'Wrap in "text"' })
 vim.keymap.set("v", "<Leader>w'", "c'<C-r>\"'<Esc>", { desc = "Wrap in 'text'" })
 vim.keymap.set("v", "<Leader>w<", 'c<<C-r>"><Esc>', { desc = "Wrap in <text>" })
 vim.keymap.set("v", "<Leader>w`", 'c`<C-r>"`<Esc>', { desc = "Wrap in `text`" })
+-- unwrap strikethrough
+vim.keymap.set("x", "<Leader>wS", function()
+  local first = vim.fn.line "v"
+  local last = vim.fn.line "."
+  if first > last then
+    first, last = last, first
+  end
+  vim.cmd "normal! \27"
+  for lnum = first, last do
+    local line = vim.fn.getline(lnum)
+    local stripped = line:gsub("~~(.-)~~", "%1"):gsub("~([^~]-)~", "%1")
+    if stripped ~= line then
+      vim.fn.setline(lnum, stripped)
+    end
+  end
+end, { desc = "Remove strikethrough from selected lines" })
 
 -- Code block
 vim.keymap.set("n", "<Leader>wcb", "i```<CR>```<Esc>O", { desc = "Code block" })
 
 -- Subscript and superscript
-vim.keymap.set("v", "<Leader>wS", 'c<sup><C-r>"</sup><Esc>', { desc = "Superscript (wrap in <sup>)" })
 vim.keymap.set("v", "<Leader>wd", 'c<sub><C-r>"</sub><Esc>', { desc = "Subscript (wrap in <sub>)" })
+vim.keymap.set("v", "<Leader>wD", 'c<sup><C-r>"</sup><Esc>', { desc = "Superscript (wrap in <sup>)" })
 
 -- Collapsible details block (selection becomes hidden)
 vim.keymap.set(
   "v",
-  "<Leader>wD",
+  "<Leader>wx",
   'c<details><CR><summary>collapsible</summary><CR><C-r>"<CR></details><Esc>',
   { desc = "Wrap in <details> (selection is collapsed)" }
 )

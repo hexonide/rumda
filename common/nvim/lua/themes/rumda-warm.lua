@@ -33,7 +33,7 @@ M.base_16 = {
   base02 = "#e0b690",
   base03 = "#9e4234",
   base04 = "#a1694d",
-  base05 = "#ab4637",
+  base05 = "#993d2f",
   base06 = "#2a1d16",
   base07 = "#1a1410",
   base08 = "#9A4235",
@@ -48,9 +48,9 @@ M.base_16 = {
 
 local heading_groups = {}
 for i = 1, 6 do
-  heading_groups["RenderMarkdownH" .. i .. "Bg"] = { bg = M.base_16.base02 }
-  heading_groups["RenderMarkdownH" .. i] = { fg = M.base_30.white, bold = true }
+  heading_groups["RenderMarkdownH" .. i .. "Bg"] = { bg = M.base_30.black2, fg = M.base_16.base0B, bold = true}
 end
+
 
 M.type = "light"
 M.polish_hl = {
