@@ -43,6 +43,7 @@ alias bngcat='./Downloads/wayland-bongocat/build/bongocat --watch-config --confi
 alias borderson='hyprctl plugin load /home/$USER/d-velopment/copy-dir/bordersplusplus/borders-plus-plus/libandalus.so'
 alias bordersoff='hyprctl plugin unload /home/$USER/d-velopment/copy-dir/bordersplusplus/borders-plus-plus/libandalus.so'
 alias htbdl='~/d-velopment/scripts/htbdl.sh'
+alias reminders='python ~/.local/share/reminders/reminders.py'
 alias noc='~/d-velopment/copy-dir/noc/src/main'
 alias package-diff='~/d-velopment/scripts/pkgdiff.sh'
 alias ptimes='~/d-velopment/scripts/prayer_times.sh'

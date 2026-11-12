@@ -105,6 +105,7 @@ if command -v eza > /dev/null; then
   alias la='eza -h --git --icons -la -sold'
   alias lt='eza -h --tree --git --icons -l -sold'
   alias lta='eza -h --tree --git --icons -la -sold'
+  alias lg='eza -h --git --git-repos-no-status --icons -l -sold -s name --group-directories-first'
 fi
 
 

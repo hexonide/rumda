@@ -1,21 +1,8 @@
-# set recolor true
-# set recolor-keephue true
-# set default-bg "#f4ecd8"
-# set default-fg "#5b4636"
-#
-# set recolor true
-# set recolor-keephue true
-# set default-bg "#1b1512"
-# set default-fg "#d2b48c"
-#
-# set recolor true
-# set recolor-keephue true
-# set default-bg "#1e1e1e"
-# set default-fg "#dcdccc"
-
-
+map <Up> scroll smooth-up
+map <Down> scroll smooth-down
+set smooth-scroll true
 set selection-clipboard clipboard
-
+set scroll-step 200
 set highlight-color "#e6c0a1aa"
 
 set statusbar-fg                "#553A2F"
@@ -29,13 +16,18 @@ set highlight-color "#e6c0a188"
 
 set default-bg "#F5DCC6"
 set recolor-lightcolor          "#f5dcc6"
-# set default-bg "#f5c7a2"
-# set recolor-lightcolor          "#f5c7a2"
-# set default-bg "#f0c997"
-# set recolor-lightcolor          "#f0c997"
-
 set default-fg "#4e2e1f"
 set recolor-darkcolor           "#4e2e1f"
+
+# set default-bg "#f5c7a2"
+# set recolor-lightcolor          "#f5c7a2"
+# set default-fg "#331c11"
+# set recolor-darkcolor           "#331c11"
+
+# set default-bg "#f0c997"
+# set recolor-lightcolor          "#f0c997"
+# set default-fg "#331c11"
+# set recolor-darkcolor           "#331c11"
 
 set recolor                     "true"
 set recolor-keephue             "false"
