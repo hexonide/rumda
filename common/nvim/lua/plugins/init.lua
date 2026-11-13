@@ -214,6 +214,13 @@ return {
         width = "block",
         icons = {},
       },
+      code = {
+        width = "block",
+        -- min_width = 30,
+        -- left_margin = 0.5,
+        -- left_pad = 0.01,
+        right_pad = 0.01,
+      },
     },
   },
 

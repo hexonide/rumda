@@ -48,8 +48,11 @@ M.base_16 = {
 
 local heading_groups = {}
 for i = 1, 6 do
-  heading_groups["RenderMarkdownH" .. i .. "Bg"] = { bg = M.base_30.lightbg, fg = M.base_16.base08, bold = true}
+  heading_groups["RenderMarkdownH" .. i .. "Bg"] = { bg = M.base_30.lightbg, fg = M.base_16.base08, bold = true }
 end
+
+heading_groups["RenderMarkdownCode"] = { bg = M.base_30.black2, bold = true }
+heading_groups["RenderMarkdownCodeInline"] = { bg = M.base_30.black2, bold = true }
 
 M.type = "dark"
 M.polish_hl = {

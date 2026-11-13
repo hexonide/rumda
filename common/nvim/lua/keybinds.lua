@@ -35,7 +35,7 @@ vim.keymap.set("x", "<Leader>wS", function()
   vim.cmd "normal! \27"
   for lnum = first, last do
     local line = vim.fn.getline(lnum)
-    local stripped = line:gsub("~~(.-)~~", "%1"):gsub("~([^~]-)~", "%1")
+    local stripped = line:gsub("~~(.-)~~", "%1")
     if stripped ~= line then
       vim.fn.setline(lnum, stripped)
     end
