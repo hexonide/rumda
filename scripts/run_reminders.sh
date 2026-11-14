@@ -2,13 +2,7 @@
 
 dir="$HOME/.local/share/reminders"
 
-for file in "$dir"/*.py "$dir"/*.sh; do
-    [[ -f "$file" ]] || continue
+python3 "$dir/ptimes.py" >/dev/null 2>&1 &
+python3 "$dir/reminders.py" >/dev/null 2>&1 &
 
-    case "$file" in
-        *.py) python3 "$file" >/dev/null 2>&1 & ;;
-        *.sh) bash "$file" >/dev/null 2>&1 & ;;
-    esac
-done
-
-disown
+disown -a

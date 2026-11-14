@@ -441,6 +441,70 @@ vim.keymap.set("n", "<Leader>tw", function()
   end
 end, { desc = "Preview and trim trailing whitespace" })
 
+-- wrapping text
+local function is_prose(line)
+  if line:match "^%s*$" then
+    return false
+  end
+  if line:match "^%s*|" or line:match "^%s*#+%s" or line:match "^%s*>" or line:match "^%s*<" then
+    return false
+  end
+  if line:match "^%s*([-*_])%s*%1%s*%1[%s%-%*_]*$" then
+    return false
+  end
+  return true
+end
+
+vim.keymap.set("x", "tw", function()
+  local width = vim.v.count > 0 and vim.v.count or 95
+  local first = vim.fn.line "v"
+  local last = vim.fn.line "."
+  if first > last then
+    first, last = last, first
+  end
+  vim.cmd "normal! \27"
+  local lines = vim.api.nvim_buf_get_lines(0, 0, last, false)
+  local fenced = false
+  local ranges = {}
+  local open
+  for lnum, line in ipairs(lines) do
+    local is_fence = line:match "^%s*```" or line:match "^%s*~~~"
+    local ok = false
+    if is_fence then
+      fenced = not fenced
+    elseif not fenced and lnum >= first then
+      ok = is_prose(line)
+    end
+    if ok then
+      open = open or lnum
+    elseif open then
+      table.insert(ranges, { open, lnum - 1 })
+      open = nil
+    end
+  end
+  if open then
+    table.insert(ranges, { open, last })
+  end
+  local saved = {
+    tw = vim.bo.textwidth,
+    fo = vim.bo.formatoptions,
+    fe = vim.bo.formatexpr,
+    flp = vim.bo.formatlistpat,
+  }
+  vim.bo.textwidth = width
+  vim.bo.formatexpr = ""
+  vim.bo.formatoptions = saved.fo:gsub("n", "") .. "n"
+  vim.bo.formatlistpat = [[^\s*\d\+[\]:.)}\t ]\s*\|^\s*[-*+]\s\+]]
+  for i = #ranges, 1, -1 do
+    vim.cmd(("normal! %dGgq%dG"):format(ranges[i][1], ranges[i][2]))
+  end
+  vim.api.nvim_win_set_cursor(0, { first, 0 })
+  vim.bo.textwidth = saved.tw
+  vim.bo.formatoptions = saved.fo
+  vim.bo.formatexpr = saved.fe
+  vim.bo.formatlistpat = saved.flp
+end, { desc = "Reflow prose in selected lines to width" })
+
 -- play vid
 vim.keymap.set("n", "<Leader>gv", function()
   local target = vim.fn.expand "<cfile>"
