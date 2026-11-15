@@ -108,6 +108,13 @@ if command -v eza > /dev/null; then
   alias lg='eza -h --git --git-repos-no-status --icons -l -sold -s name --group-directories-first'
 fi
 
+cd() {
+  if [ $# -eq 1 ] && [ -f "$1" ]; then
+    builtin cd "$(dirname "$1")"
+  else
+    builtin cd "$@"
+  fi
+}
 
 
 ## syntax highlighting
