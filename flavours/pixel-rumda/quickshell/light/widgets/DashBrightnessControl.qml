@@ -146,7 +146,7 @@ Rectangle {
 
             Process {
               id: processBrightnessUp
-              command: useDdcutil ? ["ddcutil", "setvcp", "10", "+", "10"] : ["brightnessctl", "-c", "backlight", "set", "10%+"]
+              command: useDdcutil ? ["ddcutil", "setvcp", "10", "+", "5"] : ["brightnessctl", "-c", "backlight", "set", "5%+"]
               running: false
             }
 
@@ -315,7 +315,7 @@ Rectangle {
 
             Process {
               id: processBrightnessDown
-              command: useDdcutil ? ["ddcutil", "setvcp", "10", "-", "10"] : ["brightnessctl", "-c", "backlight", "set", "10%-"]
+              command: useDdcutil ? ["ddcutil", "setvcp", "10", "-", "5"] : ["brightnessctl", "-c", "backlight", "set", "5%-"]
               running: false
             }
 
