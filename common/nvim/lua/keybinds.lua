@@ -106,50 +106,6 @@ local function item_of_line(line)
   return line:match "^%s*[%*%-%+]%s+(.-)%s*$" or line:match "^%s*%d+[.)]%s+(.-)%s*$"
 end
 
-local function scope_at_cursor()
-  local line = vim.api.nvim_get_current_line()
-  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
-  local init = 1
-  while true do
-    local s, e = line:find("[%w_%-]+::[%w_%-:]*[%w_%-]", init)
-    if not s then
-      return nil
-    end
-    local tail_end = e
-    if line:sub(e + 1, e + 1):match "%s" and item_of_line(line) then
-      tail_end = #line:gsub("%s+$", "")
-    end
-    if col >= s and col <= tail_end then
-      local segments = {}
-      local starts = {}
-      local chosen
-      local pos = s
-      for seg in line:sub(s, e):gmatch "[^:]+" do
-        table.insert(segments, seg)
-        table.insert(starts, pos)
-        if not chosen and col <= pos + #seg + 1 then
-          chosen = #segments
-        end
-        pos = pos + #seg + 2
-      end
-      chosen = chosen or #segments
-      local candidates = {}
-      if chosen == #segments then
-        local words = vim.split(vim.trim(line:sub(starts[#starts])), "%s+")
-        for n = #words, 1, -1 do
-          table.insert(candidates, table.concat(words, " ", 1, n))
-        end
-      end
-      local trimmed = {}
-      for k = 1, chosen do
-        trimmed[k] = segments[k]
-      end
-      return trimmed, chosen == #segments, candidates
-    end
-    init = e + 1
-  end
-end
-
 local function find_scope(buf, segments, prefix_last)
   local stack = {}
   local fenced = false
@@ -159,6 +115,9 @@ local function find_scope(buf, segments, prefix_last)
       fenced = not fenced
     elseif not fenced then
       local text = item_of_line(line)
+      if text then
+        text = (text:gsub("^~~(.-)~~$", "%1"))
+      end
       if text then
         local indent = buf_indent(buf, line)
         while #stack > 0 and stack[#stack].indent >= indent do
@@ -196,7 +155,10 @@ local function search_buffers(segments, prefix_last)
   local current = vim.api.nvim_get_current_buf()
   local order = { current }
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if buf ~= current and vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+    if buf ~= current and vim.bo[buf].buflisted and vim.api.nvim_buf_get_name(buf):match "%.md$" then
+      if not vim.api.nvim_buf_is_loaded(buf) then
+        vim.fn.bufload(buf)
+      end
       table.insert(order, buf)
     end
   end
@@ -207,6 +169,138 @@ local function search_buffers(segments, prefix_last)
     end
   end
 end
+
+local ref_pattern = "[%w_%-]+::[%w_%-:]*[%w_%-]"
+
+local function parse_refs(line)
+  local refs = {}
+  local body_start = line:match "^%s*[%*%-%+]%s+()" or line:match "^%s*%d+[.)]%s+()"
+  if body_start and line:sub(body_start, body_start + 1) == "~~" then
+    body_start = body_start + 2
+  end
+  local init = 1
+  while true do
+    local s, e = line:find(ref_pattern, init)
+    if not s then
+      break
+    end
+    local tail_end = e
+    if body_start == s then
+      local trimmed = line:gsub("%s+$", "")
+      trimmed = trimmed:gsub("~~$", "")
+      tail_end = #trimmed
+    end
+    local segments, starts = {}, {}
+    local pos = s
+    for seg in line:sub(s, e):gmatch "[^:]+" do
+      table.insert(segments, seg)
+      table.insert(starts, pos)
+      pos = pos + #seg + 2
+    end
+    local candidates = {}
+    local rest = vim.trim(line:sub(starts[#starts]))
+    rest = vim.trim(rest:gsub("~~%s*$", ""))
+    local words = vim.split(rest, "%s+")
+    for n = #words, 1, -1 do
+      table.insert(candidates, table.concat(words, " ", 1, n))
+    end
+    if candidates[#candidates] ~= segments[#segments] then
+      table.insert(candidates, segments[#segments])
+    end
+    table.insert(refs, { s = s, e = tail_end, segments = segments, starts = starts, candidates = candidates })
+    init = math.max(e, tail_end) + 1
+  end
+  return refs
+end
+
+local function scope_at_cursor()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+  for _, ref in ipairs(parse_refs(line)) do
+    if col >= ref.s and col <= ref.e then
+      local chosen = #ref.segments
+      for k = 1, #ref.segments - 1 do
+        if col <= ref.starts[k] + #ref.segments[k] + 1 then
+          chosen = k
+          break
+        end
+      end
+      local trimmed = {}
+      for k = 1, chosen do
+        trimmed[k] = ref.segments[k]
+      end
+      return trimmed, chosen == #ref.segments, ref.candidates
+    end
+  end
+end
+
+local function resolve_ref(segments, is_last, candidates)
+  if not is_last then
+    return search_buffers(segments, false)
+  end
+  local probe = vim.deepcopy(segments)
+  for _, cand in ipairs(candidates) do
+    probe[#probe] = cand
+    local buf, lnum = search_buffers(probe, false)
+    if buf then
+      return buf, lnum
+    end
+  end
+  probe[#probe] = candidates[#candidates]
+  return search_buffers(probe, true)
+end
+
+vim.api.nvim_set_hl(0, "UnresolvedRef", { undercurl = true, sp = "#a23a2b", fg = "#a23a2b" })
+local ref_ns = vim.api.nvim_create_namespace "unresolved_refs"
+
+local function check_refs(first, last)
+  local buf = vim.api.nvim_get_current_buf()
+  vim.api.nvim_buf_clear_namespace(buf, ref_ns, 0, -1)
+  local fenced = false
+  local total, found = 0, 0
+  for lnum, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, last, false)) do
+    if line:match "^%s*```" or line:match "^%s*~~~" then
+      fenced = not fenced
+    elseif not fenced and lnum >= first then
+      for _, ref in ipairs(parse_refs(line)) do
+        total = total + 1
+        if resolve_ref(ref.segments, true, ref.candidates) then
+          found = found + 1
+        else
+          vim.api.nvim_buf_set_extmark(buf, ref_ns, lnum - 1, ref.s - 1, {
+            end_col = ref.e,
+            hl_group = "UnresolvedRef",
+            priority = 400,
+          })
+        end
+      end
+    end
+  end
+  if found < total then
+    vim.api.nvim_create_autocmd("TextChanged", {
+      buffer = buf,
+      once = true,
+      callback = function()
+        vim.api.nvim_buf_clear_namespace(buf, ref_ns, 0, -1)
+      end,
+    })
+  end
+  print(("[%d/%d]"):format(found, total))
+end
+
+vim.keymap.set("n", "<Leader>wcr", function()
+  check_refs(1, vim.api.nvim_buf_line_count(0))
+end, { desc = "Count resolvable list references in file" })
+
+vim.keymap.set("x", "<Leader>wcr", function()
+  local first = vim.fn.line "v"
+  local last = vim.fn.line "."
+  if first > last then
+    first, last = last, first
+  end
+  vim.cmd "normal! \27"
+  check_refs(first, last)
+end, { desc = "Count resolvable list references in selection" })
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
@@ -249,7 +343,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- copy list item as a construct 
+-- copy list item as a construct
 vim.keymap.set("n", "yc", function()
   local row = vim.api.nvim_win_get_cursor(0)[1]
   local current = list_item_text(row)
@@ -277,7 +371,6 @@ vim.keymap.set("n", "yc", function()
   vim.fn.setreg("+", result)
   vim.notify(result)
 end, { desc = "Copy list item path" })
-
 
 -- CURSOR AND SCROLLING STUFF
 vim.keymap.set("n", "<leader>tn", ":set relativenumber!<CR>", { desc = "Toggle relative numbers on lines" })
@@ -452,7 +545,6 @@ vim.keymap.set("x", "gs", function()
   vim.cmd "normal! $"
 end, { desc = "Select inline comments of selected lines" })
 
-
 -- whitespace del
 vim.keymap.set("n", "<Leader>tw", function()
   local id = vim.fn.matchadd("Search", [[\s\+$]], 100)
@@ -467,6 +559,91 @@ vim.keymap.set("n", "<Leader>tw", function()
 end, { desc = "Preview and trim trailing whitespace" })
 
 -- wrapping text
+local function is_title(line)
+  local body = line:match "^%s*(.-)%s*$"
+  for _, mark in ipairs { "***", "___", "**", "__", "*", "_" } do
+    local inner = body:match("^" .. vim.pesc(mark) .. "([^%*_]+)" .. vim.pesc(mark) .. "$")
+    if inner and inner:match "%S" then
+      return true
+    end
+  end
+  return false
+end
+
+local title_ns = vim.api.nvim_create_namespace "centered_titles"
+
+local function in_indented_code(root, row)
+  local node = root:named_descendant_for_range(row, 4, row, 4)
+  while node do
+    if node:type() == "indented_code_block" then
+      return true
+    end
+    node = node:parent()
+  end
+  return false
+end
+
+local function define_title_hl()
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+  local base = { fg = normal.fg, bg = normal.bg }
+  vim.api.nvim_set_hl(0, "CenteredTitleBold", vim.tbl_extend("force", base, { bold = true }))
+  vim.api.nvim_set_hl(0, "CenteredTitleItalic", vim.tbl_extend("force", base, { italic = true }))
+  vim.api.nvim_set_hl(0, "CenteredTitleBoldItalic", vim.tbl_extend("force", base, { bold = true, italic = true }))
+end
+
+define_title_hl()
+vim.api.nvim_create_autocmd("ColorScheme", { callback = define_title_hl })
+
+local function title_group(line)
+  local body = line:match "^%s*(.-)%s*$"
+  if body:match "^%*%*%*" or body:match "^___" then
+    return "CenteredTitleBoldItalic"
+  elseif body:match "^%*%*" or body:match "^__" then
+    return "CenteredTitleBold"
+  end
+  return "CenteredTitleItalic"
+end
+
+local function conceal_markers(buf, row, line)
+  local body = line:match "^%s*(.-)%s*$"
+  local lead = #line:match "^%s*"
+  for _, mark in ipairs { "***", "___", "**", "__", "*", "_" } do
+    local n = #mark
+    if #body > 2 * n and body:sub(1, n) == mark and body:sub(-n) == mark then
+      vim.api.nvim_buf_set_extmark(buf, title_ns, row, lead, { end_col = lead + n, conceal = "" })
+      vim.api.nvim_buf_set_extmark(buf, title_ns, row, lead + #body - n, { end_col = lead + #body, conceal = "" })
+      return
+    end
+  end
+end
+
+local function mark_titles(buf)
+  vim.api.nvim_buf_clear_namespace(buf, title_ns, 0, -1)
+  local ok, parser = pcall(vim.treesitter.get_parser, buf, "markdown")
+  if not ok or not parser then
+    return
+  end
+  local root = parser:parse()[1]:root()
+  for i, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+    if line:match "^%s%s%s%s" and is_title(line) and in_indented_code(root, i - 1) then
+      vim.api.nvim_buf_set_extmark(buf, title_ns, i - 1, 0, {
+        end_col = #line,
+        hl_group = title_group(line),
+        priority = 300,
+      })
+      conceal_markers(buf, i - 1, line)
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "TextChanged" }, {
+  callback = function(args)
+    if vim.bo[args.buf].filetype == "markdown" then
+      mark_titles(args.buf)
+    end
+  end,
+})
+
 local function is_prose(line)
   if line:match "^%s*$" then
     return false
@@ -477,11 +654,66 @@ local function is_prose(line)
   if line:match "^%s*([-*_])%s*%1%s*%1[%s%-%*_]*$" then
     return false
   end
-  return true
+  local body = line:match "^%s*[%*%-%+]%s+(.-)%s*$" or line:match "^%s*%d+[.)]%s+(.-)%s*$" or line
+  return not is_title(body)
 end
 
-vim.keymap.set("x", "tw", function()
-  local width = vim.v.count > 0 and vim.v.count or 95
+local function center_titles(first, last, width)
+  local fenced = false
+  for lnum, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, last, false)) do
+    if line:match "^%s*```" or line:match "^%s*~~~" then
+      fenced = not fenced
+    elseif not fenced and lnum >= first then
+      local is_target = is_title(line) and not line:match "^%s*[%*%-%+]%s" and not line:match "^%s*%d+[.)]%s"
+      -- is_target = is_target or line:match "^%s*#+%s"
+      if is_target then
+        local text = line:match "^%s*(.-)%s*$"
+        local pad = math.max(0, math.floor((width - vim.fn.strdisplaywidth(text)) / 2))
+        vim.api.nvim_buf_set_lines(0, lnum - 1, lnum, false, { string.rep(" ", pad) .. text })
+      end
+    end
+  end
+end
+
+local tw_range = { 70, 90 }
+
+local function reflow_ranges(buf, ranges, offset, width)
+  local total, count = 0, 0
+  vim.api.nvim_buf_call(buf, function()
+    local saved = {
+      tw = vim.bo.textwidth,
+      fo = vim.bo.formatoptions,
+      fe = vim.bo.formatexpr,
+      flp = vim.bo.formatlistpat,
+    }
+    vim.bo.textwidth = width
+    vim.bo.formatexpr = ""
+    vim.bo.formatoptions = saved.fo:gsub("n", "") .. "n"
+    vim.bo.formatlistpat = [[^\s*\d\+[\]:.)}\t ]\s*\|^\s*[-*+]\s\+]]
+    for i = #ranges, 1, -1 do
+      local s, e = ranges[i][1] - offset, ranges[i][2] - offset
+      local before = vim.api.nvim_buf_line_count(0)
+      vim.cmd(("normal! %dGgq%dG"):format(s, e))
+      local new_end = e + vim.api.nvim_buf_line_count(0) - before
+      local res = vim.api.nvim_buf_get_lines(0, s - 1, new_end, false)
+      for j = 1, #res - 1 do
+        local nxt = res[j + 1]
+        if not nxt:match "^%s*[%*%-%+]%s" and not nxt:match "^%s*%d+[.)]%s" then
+          local gap = width - vim.fn.strdisplaywidth(res[j])
+          total = total + gap * gap
+          count = count + 1
+        end
+      end
+    end
+    vim.bo.textwidth = saved.tw
+    vim.bo.formatoptions = saved.fo
+    vim.bo.formatexpr = saved.fe
+    vim.bo.formatlistpat = saved.flp
+  end)
+  return count > 0 and total / count or 0
+end
+
+local function wrap_selection(count, center)
   local first = vim.fn.line "v"
   local last = vim.fn.line "."
   if first > last then
@@ -510,25 +742,47 @@ vim.keymap.set("x", "tw", function()
   if open then
     table.insert(ranges, { open, last })
   end
-  local saved = {
-    tw = vim.bo.textwidth,
-    fo = vim.bo.formatoptions,
-    fe = vim.bo.formatexpr,
-    flp = vim.bo.formatlistpat,
-  }
-  vim.bo.textwidth = width
-  vim.bo.formatexpr = ""
-  vim.bo.formatoptions = saved.fo:gsub("n", "") .. "n"
-  vim.bo.formatlistpat = [[^\s*\d\+[\]:.)}\t ]\s*\|^\s*[-*+]\s\+]]
-  for i = #ranges, 1, -1 do
-    vim.cmd(("normal! %dGgq%dG"):format(ranges[i][1], ranges[i][2]))
+
+  local width = count
+  if #ranges > 0 then
+    if count == 0 then
+      local snapshot = vim.api.nvim_buf_get_lines(0, first - 1, last, false)
+      local scratch = vim.api.nvim_create_buf(false, true)
+      for _, opt in ipairs { "tabstop", "shiftwidth", "expandtab", "comments" } do
+        vim.bo[scratch][opt] = vim.bo[opt]
+      end
+      local best
+      for w = tw_range[2], tw_range[1], -1 do
+        vim.api.nvim_buf_set_lines(scratch, 0, -1, false, snapshot)
+        local score = reflow_ranges(scratch, ranges, first - 1, w)
+        if not best or score < best then
+          best = score
+          width = w
+        end
+      end
+      vim.api.nvim_buf_delete(scratch, { force = true })
+      vim.notify("Wrapped at " .. width)
+    end
+    local before = vim.api.nvim_buf_line_count(0)
+    reflow_ranges(0, ranges, 0, width)
+    last = last + vim.api.nvim_buf_line_count(0) - before
+  elseif width == 0 then
+    width = math.floor((tw_range[1] + tw_range[2]) / 2)
+  end
+
+  if center then
+    center_titles(first, last, width)
   end
   vim.api.nvim_win_set_cursor(0, { first, 0 })
-  vim.bo.textwidth = saved.tw
-  vim.bo.formatoptions = saved.fo
-  vim.bo.formatexpr = saved.fe
-  vim.bo.formatlistpat = saved.flp
-end, { desc = "Reflow prose in selected lines to width" })
+end
+
+vim.keymap.set("x", "tw", function()
+  wrap_selection(vim.v.count, false)
+end, { desc = "Rewrap/align text prose in selected lines" })
+
+vim.keymap.set("x", "taw", function()
+  wrap_selection(vim.v.count, true)
+end, { desc = "Rewrap/align text prose & then center titles" })
 
 -- play vid
 vim.keymap.set("n", "<Leader>gv", function()
