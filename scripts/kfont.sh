@@ -19,3 +19,5 @@ esac
 for sock in /tmp/kitty-*; do
   [ -S "$sock" ] && kitten @ --to "unix:$sock" load-config --override "$FONT"
 done
+
+$HOME/.config/rumda/scripts/cinnamon_kbg.sh
