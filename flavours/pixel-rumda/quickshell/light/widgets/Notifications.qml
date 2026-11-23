@@ -44,7 +44,7 @@ Scope {
             ? modelData.expireTimeout * 1000
             : Config.notifTimeout
           readonly property real offscreen: Config.notifWidth + Config.notifShadowOffsetX
-
+          property real shakeX: 0
           property real progress: 1.0
           property real slideX: offscreen
           property bool closing: false
@@ -89,7 +89,21 @@ Scope {
               else slot.modelData.expire()
             }
           }
+          Timer {
+            interval: Config.notifShakeInterval
+            repeat: true
+            running: slot.critical && !slot.closing
+            onTriggered: shake.restart()
+          }
 
+          SequentialAnimation {
+            id: shake
+            NumberAnimation { target: slot; property: "shakeX"; to: -Config.notifShakeAmount; duration: 45 }
+            NumberAnimation { target: slot; property: "shakeX"; to: Config.notifShakeAmount; duration: 70 }
+            NumberAnimation { target: slot; property: "shakeX"; to: -Config.notifShakeAmount * 0.6; duration: 70 }
+            NumberAnimation { target: slot; property: "shakeX"; to: Config.notifShakeAmount * 0.6; duration: 60 }
+            NumberAnimation { target: slot; property: "shakeX"; to: 0; duration: 45 }
+          }
           Rectangle {
             x: card.x + Config.notifShadowOffsetX
             y: Config.notifShadowOffsetY
@@ -102,7 +116,7 @@ Scope {
 
           Rectangle {
             id: card
-            x: slot.slideX
+            x: slot.slideX + slot.shakeX
             y: 0
             z: 1
             width: slot.width - Config.notifShadowOffsetX

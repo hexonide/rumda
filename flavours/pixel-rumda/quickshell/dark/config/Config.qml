@@ -105,6 +105,8 @@ Singleton {
   readonly property int notifSpacing: 10
   readonly property int notifPadding: 12
   readonly property int notifMaxVisible: 5
+  readonly property int notifShakeInterval: 30 * 1000
+  readonly property int notifShakeAmount: 10
   readonly property string notifFont: "Terminess Nerd Font"
 
   readonly property int popoutVolShadowOffsetX: 4
