@@ -9,7 +9,7 @@ require "nvchad.options"
 vim.opt.timeoutlen = 1000
 vim.opt.number = true -- Show absolute line number on current line
 vim.opt.relativenumber = false -- show relative nums for other lines
-vim.opt.scrolloff = 0
+vim.opt.scrolloff = 4
 
 
 
