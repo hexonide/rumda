@@ -93,9 +93,10 @@ ln -fs "$SRC" "$COMMON_FILE"
 /home/$USER/.config/rumda/scripts/zathuratheme.sh "$THEME"
 /home/$USER/.config/rumda/scripts/locktheme.sh "$THEME"
 
-notify-send "Rumda:" "switched to '$THEME' theme" &
 
 hyprctl reload >/dev/null 2>&1 || true
 
 echo "Switched to '$THEME' theme"
 
+sleep 1
+$HOME/.config/rumda/scripts/random_notif.sh "Rumda:" "switched to main $THEME theme" &

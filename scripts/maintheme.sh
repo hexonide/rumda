@@ -28,5 +28,5 @@ hyprctl reload
 killall quickshell
 quickshell -p ~/.config/rumda/common/quickshell/shell.qml > /dev/null 2>&1 & disown
 
-notify-send "Rumda" "switched to main theme."
-
+sleep 1
+$HOME/.config/rumda/scripts/random_notif.sh "Rumda" "switched to main $1 theme."

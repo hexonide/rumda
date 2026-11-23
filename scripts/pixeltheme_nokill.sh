@@ -29,5 +29,5 @@ awww img "$WALLPAPER" \
  
 /$HOME/.config/rumda/scripts/pixel_hypr.sh $1
 /$HOME/.config/rumda/scripts/alacrittytheme.sh $1
- 
-notify-send "Rumda" "switched to pixel theme."
+sleep 1
+$HOME/.config/rumda/scripts/random_notif.sh "Rumda" "switched to pixel $1 theme."

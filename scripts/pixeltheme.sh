@@ -23,5 +23,5 @@ awww img /$HOME/.config/rumda/pictures/nazhim-pixel.png \
 killall quickshell
 quickshell -p ~/.config/rumda/flavours/pixel-rumda/quickshell/shell.qml > /dev/null 2>&1 & disown
 
-notify-send "Rumda" "switched to pixel theme."
-
+sleep 1
+$HOME/.config/rumda/scripts/random_notif.sh "Rumda" "switched to pixel $1 theme."

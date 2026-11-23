@@ -16,5 +16,5 @@ awww img /$HOME/.config/rumda/pictures/nazhim-warm.png  \
 /$HOME/.config/rumda/scripts/warm_hypr.sh
 /$HOME/.config/rumda/scripts/warm_alacritty.sh
 
-notify-send "Rumda" "switched to warm theme."
-
+sleep 1
+$HOME/.config/rumda/scripts/random_notif.sh "Rumda" "switched to warm theme."
