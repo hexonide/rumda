@@ -56,7 +56,12 @@ Scope {
             dismissOnEnd = dismiss
             slideOut.start()
           }
-
+          function rich(s) {
+            const esc = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                         .replace(/\n/g, "<br>")
+            return esc.replace(/[\u0600-\u06FF\u0750-\u077F](?:[\u0600-\u06FF\u0750-\u077F\s]*[\u0600-\u06FF\u0750-\u077F])?/g,
+                               m => '<span style="font-family:Amiri">' + m + '</span>')
+          }
           Layout.fillWidth: true
           implicitHeight: card.height + Config.notifShadowOffsetY
 
@@ -199,7 +204,8 @@ Scope {
 
                   Text {
                     Layout.fillWidth: true
-                    text: slot.modelData.summary
+                    text: slot.rich(slot.modelData.summary)
+										textFormat: Text.RichText
                     color: textDark
                     font.family: Config.notifFont
                     font.pixelSize: 16
@@ -209,7 +215,8 @@ Scope {
 
                   Text {
                     Layout.fillWidth: true
-                    text: slot.modelData.body
+                    text: slot.rich(slot.modelData.body)
+										textFormat: Text.RichText
                     color: Colors.accentColor
                     font.family: Config.notifFont
                     font.pixelSize: 14
