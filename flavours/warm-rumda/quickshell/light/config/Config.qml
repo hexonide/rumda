@@ -81,6 +81,7 @@ Singleton {
   readonly property int notifShakeInterval: 30 * 1000
   readonly property int notifShakeAmount: 10
   readonly property string notifFont: "Terminess Nerd Font"
+  readonly property string notifArabicFont: "Amiri"
 
   // popout volume
   readonly property int popoutVolShadowOffsetX: 0

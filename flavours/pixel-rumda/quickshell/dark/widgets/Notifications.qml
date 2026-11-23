@@ -60,7 +60,7 @@ Scope {
             const esc = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
                          .replace(/\n/g, "<br>")
             return esc.replace(/[\u0600-\u06FF\u0750-\u077F](?:[\u0600-\u06FF\u0750-\u077F\s]*[\u0600-\u06FF\u0750-\u077F])?/g,
-                               m => '<span style="font-family:Amiri">' + m + '</span>')
+                               m => '<span style="font-family:\'' + Config.notifArabicFont + '\'">' + m + '</span>')
           }
           Layout.fillWidth: true
           implicitHeight: card.height + Config.notifShadowOffsetY
