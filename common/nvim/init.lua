@@ -142,6 +142,32 @@ require "nvchad.autocmds"
 vim.schedule(function()
   require "mappings"
   require "keybinds"
+
+  local utils = require "nvchad.utils"
+  local original_list = utils.list_themes
+  local hidden = {}
+
+  utils.list_themes = function()
+    local custom, is_custom = {}, {}
+    local dir = vim.fn.stdpath "config" .. "/lua/themes"
+    for _, file in ipairs(vim.fn.readdir(dir)) do
+      local name = file:match "(.+)%..+"
+      if name then
+        table.insert(custom, name)
+        is_custom[name] = true
+      end
+    end
+    local skip = {}
+    for _, name in ipairs(hidden) do
+      skip[name] = true
+    end
+    for _, name in ipairs(original_list()) do
+      if not is_custom[name] and not skip[name] then
+        table.insert(custom, name)
+      end
+    end
+    return custom
+  end
 end)
 
 local reload_pending = false

@@ -65,8 +65,15 @@ return {
       mappings = false,
       on_attach = function(bufnr)
         local map = vim.keymap.set
-        map("n", "<Leader>wt", "<Cmd>MDToc<CR>", { buffer = bufnr, desc = "Show table of contents" })
-        map("n", "<Leader>wT", "<Cmd>MDTocAll<CR>", { buffer = bufnr, desc = "Show full table of contents" })
+        -- map("n", "<Leader>wT", "<Cmd>MDToc<CR>", { buffer = bufnr, desc = "Show table of contents" })
+        map("n", "<Leader>wt", function()
+          vim.cmd "MDTocAll"
+          local items = vim.fn.getloclist(0)
+          local title = vim.fn.getloclist(0, { title = 0 }).title
+          vim.cmd "lclose"
+          vim.fn.setqflist({}, " ", { title = title, items = items })
+          vim.cmd "copen"
+        end, { buffer = bufnr, desc = "Show full table of contents in quickfix" })
         map("n", "<Leader>wi", "<Cmd>MDInsertToc<CR>", { buffer = bufnr, desc = "Insert table of contents" })
       end,
     },
@@ -301,6 +308,16 @@ return {
           cmd = { vim.fn.stdpath "data" .. "/mason/bin/jdtls", "-data", workspace },
           root_dir = root,
           capabilities = require("cmp_nvim_lsp").default_capabilities(),
+          settings = {
+            java = {
+              format = {
+                settings = {
+                  url = "/home/hexogen/d-velopment/backups/java-formatter.xml",
+                  profile = "MyProfile",
+                },
+              },
+            },
+          },
         }
       end
       start()

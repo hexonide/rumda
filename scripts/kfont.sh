@@ -8,7 +8,7 @@ case "$1" in
     FONT='font_family=family="Terminess Nerd Font" style="Bold"'
     ;;
   g)
-    FONT='font_family=family="Greybeard 16px"'
+    FONT='font_family=family="Greybeard 16px"' 
     ;;
   *)
     echo "Usage: kfont [i|t|g]"
@@ -16,8 +16,13 @@ case "$1" in
     ;;
 esac
 
+
 for sock in /tmp/kitty-*; do
   [ -S "$sock" ] && kitten @ --to "unix:$sock" load-config --override "$FONT"
 done
 
-$HOME/.config/rumda/scripts/cinnamon_kbg.sh
+case "$1" in
+  g) 
+    $HOME/.config/rumda/scripts/cinnamon_kbg.sh
+    ;;
+esac
