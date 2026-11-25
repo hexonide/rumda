@@ -6,9 +6,118 @@ return {
   },
   -- These are some examples, uncomment them if you want to see them work!
   {
+    "IogaMaster/neocord",
+    event = "VeryLazy",
+    opts = function()
+      local cache = {}
+
+      local utils = require "neocord.utils"
+      local original_asset_url = utils.get_asset_url
+      utils.get_asset_url = function(name)
+        if type(name) == "string" and name:match "^https?://" then
+          return name
+        end
+        return original_asset_url(name)
+      end
+
+      local base = "https://hexonide.github.io/share/"
+      local headphones = base .. "headphones3.png"
+      local small = base .. "vimcdark.png"
+
+      local langs = {
+        gpg = { "Markdown", "headphones" },
+        lua = { "Lua", "headphones" },
+        c = { "C", "default" },
+        h = { "C Header", "default" },
+        cpp = { "C++", "default" },
+        hpp = { "C++ Header", "default" },
+        py = { "Python", "default" },
+        md = { "Markdown", "headphones" },
+        js = { "JavaScript", "default" },
+        ts = { "TypeScript", "default" },
+        rs = { "Rust", "default" },
+        go = { "Go", "default" },
+        java = { "Java", "default" },
+        sh = { "Shell", "default" },
+        zsh = { "Zsh", "default" },
+        nix = { "Nix", "default" },
+        json = { "JSON", "default" },
+        toml = { "TOML", "default" },
+        yaml = { "YAML", "default" },
+        yml = { "YAML", "default" },
+        html = { "HTML", "default" },
+        css = { "CSS", "default" },
+        vim = { "Vim script", "default" },
+        txt = { "Text", "default" },
+      }
+
+      local function resolve(icon)
+        if icon == "headphones" then
+          return headphones
+        end
+        if icon:match "^https?://" then
+          return icon
+        end
+        return base .. icon
+      end
+
+      local file_assets = {}
+      for ext, entry in pairs(langs) do
+        local name, icon = entry[1], entry[2]
+        if icon ~= "default" then
+          file_assets[ext] = { name, resolve(icon) }
+        end
+      end
+
+      local function project()
+        local dir = vim.fn.expand "%:p:h"
+        if dir == "" then
+          dir = vim.fn.getcwd()
+        end
+        if cache[dir] == nil then
+          local out = vim.fn.systemlist { "git", "-C", dir, "rev-parse", "--show-toplevel" }
+          if vim.v.shell_error == 0 and out[1] then
+            cache[dir] = vim.fn.fnamemodify(out[1], ":t")
+          else
+            cache[dir] = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+          end
+        end
+        return "Working on " .. cache[dir]
+      end
+
+      local function file_info()
+        return "Editing " .. vim.fn.expand "%:t" .. " in " .. vim.fn.expand "%:p:h:t"
+      end
+
+      return {
+        logo = small,
+        logo_tooltip = "Neovim",
+        main_image = "language",
+        file_assets = file_assets,
+        show_time = true,
+        global_timer = true,
+        debounce_timeout = 10,
+        blacklist = { "NvimTree", "dashboard" },
+        editing_text = file_info,
+        reading_text = file_info,
+        terminal_text = file_info,
+        line_number_text = "Line %s out of %s",
+        workspace_text = project,
+      }
+    end,
+  },
+
+  {
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
+    end,
+  },
+  {
+    "jamessan/vim-gnupg",
+    lazy = false,
+    init = function()
+      vim.g.GPGPreferSymmetric = 1
     end,
   },
   {

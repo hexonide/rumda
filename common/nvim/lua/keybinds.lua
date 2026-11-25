@@ -13,7 +13,7 @@ vim.api.nvim_set_keymap("n", "<leader>l", "@a", { noremap = true, silent = true 
 vim.keymap.set("v", "<Leader>wb", 'c**<C-r>"**<Esc>', { desc = "Bold selection" })
 vim.keymap.set("v", "<Leader>wi", 'c*<C-r>"*<Esc>', { desc = "Italic selection" })
 vim.keymap.set("v", "<Leader>wu", 'c_<C-r>"_<Esc>', { desc = "Underline/emphasis selection" })
-vim.keymap.set("v", "<Leader>wl", 'c[<C-r>"]()<Esc>i', { desc = "Create link (add URL)" })
+vim.keymap.set("v", "<Leader>wl", '"zc[<C-r>z]()<Esc>i', { desc = "Create link (add URL)" })
 vim.keymap.set("v", "<Leader>ws", 'c~~<C-r>"~~<Esc>', { desc = "Strikethrough" })
 
 -- Text wrappers (accessed via <Leader>w)

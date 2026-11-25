@@ -79,48 +79,6 @@ require("lazy").setup({
     import = "nvchad.plugins",
   },
   {
-    "IogaMaster/neocord",
-    event = "VeryLazy",
-    opts = function()
-      local cache = {}
-
-      local function project()
-        local dir = vim.fn.expand "%:p:h"
-        if dir == "" then
-          dir = vim.fn.getcwd()
-        end
-        if cache[dir] == nil then
-          local out = vim.fn.systemlist { "git", "-C", dir, "rev-parse", "--show-toplevel" }
-          if vim.v.shell_error == 0 and out[1] then
-            cache[dir] = vim.fn.fnamemodify(out[1], ":t")
-          else
-            cache[dir] = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-          end
-        end
-        return "Working on " .. cache[dir]
-      end
-
-      local function file_info()
-        return "Editing " .. vim.fn.expand "%:t" .. " in " .. vim.fn.expand "%:p:h:t"
-      end
-
-      return {
-        logo = "auto",
-        logo_tooltip = "Neovim",
-        main_image = "language",
-        show_time = true,
-        global_timer = true,
-        debounce_timeout = 10,
-        blacklist = { "NvimTree", "dashboard" },
-        editing_text = file_info,
-        reading_text = file_info,
-        terminal_text = file_info,
-        line_number_text = "Line %s out of %s",
-        workspace_text = project,
-      }
-    end,
-  },
-  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = { "lua", "cpp", "c", "python", "markdown", "markdown_inline" },
