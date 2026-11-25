@@ -14,6 +14,10 @@
 
 > [!IMPORTANT]
 >
+> Contact me on Discord for help or anything:  
+>
+>  [![Discord (1268561493893320795)](https://img.shields.io/badge/My-Discord-%23F0C997.svg)](https://discord.com/users/1268561493893320795)
+>
 > Built over the goat'ed Amadeus: https://github.com/xfcasio/amadeus
 >
 > wanna try Rumda?
