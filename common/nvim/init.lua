@@ -137,6 +137,7 @@ local function reload_theme()
     end
   end
   require("base46").load_all_highlights()
+  vim.api.nvim_exec_autocmds("ColorScheme", {})
   vim.cmd "redraw!"
 end
 
