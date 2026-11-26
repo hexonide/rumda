@@ -138,7 +138,7 @@ Rectangle {
             anchors.fill: parent
             onWheel: wheel => {
               const direction = wheel.angleDelta.y > 0 ? "-1" : "+1";
-              Hyprland.dispatch("workspace e" + direction);
+              Hyprland.dispatch(Hyprland.usingLua ? 'hl.dsp.focus({ workspace = "e' + direction + '" })' : "workspace e" + direction);
             }
           }
         }
