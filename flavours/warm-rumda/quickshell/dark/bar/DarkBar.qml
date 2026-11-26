@@ -69,7 +69,6 @@ Scope {
     MouseArea {
       anchors.fill: parent
       onWheel: wheel => {
-        Hyprland.dispatch("workspace 1");
         // Mpris.players.values.forEach((player, idx) => player.pause())
         // this ^ pauses on wspace switch, which i dont like
       }

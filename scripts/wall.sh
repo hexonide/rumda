@@ -29,7 +29,6 @@ fi
 fi
 
 if ! pgrep -x "awww-daemon" >/dev/null; then
-echo "Starting awww-daemon..."
 awww-daemon &
 sleep 1
 fi

@@ -14,7 +14,7 @@ Scope {
 
   function setZoom(value) {
     zoomLevel = Math.max(Config.zoomMin, Math.min(Config.zoomMax, value));
-    Quickshell.execDetached(["hyprctl", "keyword", "cursor:zoom_factor", String(zoomLevel)]);
+    Quickshell.execDetached([Quickshell.env("HOME") + "/.config/rumda/scripts/hypr_zoom.sh", String(zoomLevel)]);
   }
 
   function toggle() {
