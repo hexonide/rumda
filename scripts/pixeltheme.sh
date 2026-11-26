@@ -10,6 +10,10 @@ if [ "$1" != "dark" ] && [ "$1" != "light" ]; then
   exit 1
 fi
 
+if ! pgrep -x "awww-daemon" >/dev/null; then
+awww-daemon &
+sleep 1
+fi
 
 awww img /$HOME/.config/rumda/pictures/nazhim-pixel.png \
   --transition-type grow \

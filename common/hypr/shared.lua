@@ -1,6 +1,7 @@
 require("keybinds")
 require("environment")
 require("windowrules")
+require("autostart")
 
 return function(opts)
 	opts = opts or {}
