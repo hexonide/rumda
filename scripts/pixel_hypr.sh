@@ -14,3 +14,4 @@ COMMON_FILE="$HOME/.config/hypr/hyprland.conf"
 SRC="$HOME/.config/rumda/flavours/pixel-rumda/$1/hyprland.conf"
 
 ln -fs "$SRC" "$COMMON_FILE"
+[[ -f "${SRC%.conf}.lua" ]] && ln -fs "${SRC%.conf}.lua" "${COMMON_FILE%.conf}.lua"

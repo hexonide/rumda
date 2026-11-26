@@ -88,6 +88,8 @@ sleep 0.9
 rm -f "$COMMON_FILE"
 ln -fs "$SRC" "$COMMON_FILE"
 
+[[ -f "${SRC%.conf}.lua" ]] && ln -fs "${SRC%.conf}.lua" "${COMMON_FILE%.conf}.lua"
+
 /home/$USER/.config/rumda/scripts/alacrittytheme.sh "$THEME"
 /home/$USER/.config/rumda/scripts/yazitheme.sh "$THEME"
 /home/$USER/.config/rumda/scripts/zathuratheme.sh "$THEME"
