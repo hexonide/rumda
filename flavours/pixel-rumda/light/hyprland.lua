@@ -19,6 +19,7 @@ hl.config({
 			render_power = 4,
 			offset = { 9, 9 },
 			color = 0xFF90664A,
+			color_inactive = 0xFF90664A,
 			scale = 1.0,
 		},
 	},

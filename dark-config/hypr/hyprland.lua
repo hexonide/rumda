@@ -1,9 +1,5 @@
 package.path = os.getenv("HOME") .. "/.config/rumda/common/hypr/?.lua;" .. package.path
 
-hl.on("hyprland.start", function()
-	hl.exec_cmd("sleep 2 && hyprctl reload &disown")
-end)
-
 hl.config({
 	general = {
 		gaps_in = 9,

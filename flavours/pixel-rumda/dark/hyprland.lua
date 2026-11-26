@@ -19,9 +19,10 @@ hl.config({
 			render_power = 4,
 			offset = { 9, 9 },
 			color = 0xEF9B6E52,
+			color_inactive = 0xEF9B6E52,
 			scale = 1.0,
 		},
 	},
 })
 
-require("shared")({ fakeElastic = { { 0.68, -0.1 }, { 0.265, 1 } } })
+require("shared")()

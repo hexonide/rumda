@@ -4,15 +4,10 @@ require("windowrules")
 
 return function(opts)
 	opts = opts or {}
-	local fakeElastic = opts.fakeElastic or { { 0.68, 0.5 }, { 0.265, 1 } }
 
-	------------------------
-	---- LOOK AND FEEL -----
-	------------------------
 	hl.config({
 		general = {
-			-- gaps_out = 40              -- < this is the original gap
-			gaps_out = { top = 45, right = 40, bottom = 45, left = 40 }, -- < modified top gap in preparation for an incoming feature in my quickshell conf.
+			gaps_out = { top = 45, right = 40, bottom = 45, left = 40 },
 			allow_tearing = true,
 			layout = "dwindle",
 		},
@@ -41,7 +36,7 @@ return function(opts)
 	hl.curve("almostLinear", { type = "bezier", points = { { 0.5, 0.5 }, { 0.75, 1.0 } } })
 	hl.curve("quick", { type = "bezier", points = { { 0.15, 0 }, { 0.1, 1 } } })
 	hl.curve("overshoot", { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.1 } } })
-	hl.curve("fakeElastic", { type = "bezier", points = fakeElastic })
+	hl.curve("fakeElastic", { type = "bezier", points = { { 0.68, 0.5 }, { 0.265, 1 } } })
 	hl.curve("xfcBezier", { type = "bezier", points = { { 0.1, 0.9 }, { 0.1, 1.03 } } })
 
 	hl.animation({ leaf = "global", enabled = true, speed = 10, bezier = "default" })
@@ -79,10 +74,6 @@ return function(opts)
 			vrr = 0,
 		},
 	})
-
-	---------------
-	---- INPUT ----
-	---------------
 
 	hl.config({
 		input = {
