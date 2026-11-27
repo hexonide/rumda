@@ -1,0 +1,7 @@
+require "keybinds.general"
+require "keybinds.markdown_format"
+require "keybinds.markdown_refs"
+require "keybinds.markdown_wrap"
+require "keybinds.comments"
+require "keybinds.diagnostics"
+require "keybinds.external"
