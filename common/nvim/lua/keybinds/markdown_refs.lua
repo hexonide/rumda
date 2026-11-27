@@ -49,7 +49,7 @@ local function find_scope(buf, segments, prefix_last)
               if prefix_last then
                 ok = entry.raw:sub(1, #want) == want
               else
-                ok = entry.raw == want
+                ok = entry.raw == want or entry.text == want
               end
             else
               ok = entry.text == want
@@ -359,6 +359,10 @@ local function find_references()
   return items, text
 end
 
+-- note to self: this only gets references to the children of the list item hovered, not
+-- references the item itself. this behaviour makes sense, as standing at the root node
+-- of a tree which is usually 1 word, should get references to all intermediates and leaves
+-- rather than references to that single word, which could be unrelated to the list itself
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
   callback = function(args)
