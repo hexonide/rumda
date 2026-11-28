@@ -150,20 +150,254 @@ local function scope_at_cursor()
   end
 end
 
-local function resolve_ref(segments, is_last, candidates)
+local function resolve_ref(segments, is_last, candidates, strict)
   if not is_last then
     return search_buffers(segments, false)
   end
   local probe = vim.deepcopy(segments)
   for _, cand in ipairs(candidates) do
-    probe[#probe] = cand
-    local buf, lnum = search_buffers(probe, false)
-    if buf then
-      return buf, lnum
+    local variants = { cand }
+    if strict then
+      local stripped = (cand:gsub("[%.,;:!%?%)]+$", ""))
+      if stripped ~= cand and stripped ~= "" then
+        table.insert(variants, stripped)
+      end
     end
+    for _, v in ipairs(variants) do
+      probe[#probe] = v
+      local buf, lnum = search_buffers(probe, false)
+      if buf then
+        return buf, lnum
+      end
+    end
+  end
+  if strict then
+    return nil
   end
   probe[#probe] = candidates[#candidates]
   return search_buffers(probe, true)
+end
+
+vim.api.nvim_set_hl(0, "UnresolvedRef", { undercurl = true, sp = "#a23a2b", fg = "#a23a2b" })
+local ref_ns = vim.api.nvim_create_namespace "unresolved_refs"
+
+local function norm(s)
+  return (s:lower():gsub("[^%w]", ""))
+end
+
+local function lev(a, b)
+  local prev = {}
+  for j = 0, #b do
+    prev[j] = j
+  end
+  for i = 1, #a do
+    local cur = { [0] = i }
+    for j = 1, #b do
+      local cost = a:byte(i) == b:byte(j) and 0 or 1
+      cur[j] = math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost)
+    end
+    prev = cur
+  end
+  return prev[#b]
+end
+
+local function tokens(s)
+  local t = {}
+  for w in s:lower():gmatch "%w+" do
+    t[#t + 1] = w
+  end
+  return t
+end
+
+local function similarity(a, b)
+  local ta, tb = tokens(a), tokens(b)
+  if #ta == 0 or #tb == 0 then
+    return 0
+  end
+  local used, matched = {}, 0
+  local pending = {}
+  for _, x in ipairs(ta) do
+    local hit
+    for j, y in ipairs(tb) do
+      if not used[j] and x == y then
+        hit = j
+        break
+      end
+    end
+    if hit then
+      used[hit] = true
+      matched = matched + 1
+    else
+      pending[#pending + 1] = x
+    end
+  end
+  for _, x in ipairs(pending) do
+    for j, y in ipairs(tb) do
+      if not used[j] and #x >= 4 and #y >= 4 and lev(x, y) <= 1 then
+        used[j] = true
+        matched = matched + 1
+        break
+      end
+    end
+  end
+  local p, r = matched / #ta, matched / #tb
+  if p + r == 0 then
+    return 0
+  end
+  return 2 * p * r / (p + r)
+end
+
+local function build_index()
+  local items = {}
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted and vim.api.nvim_buf_get_name(buf):match "%.md$" then
+      local stack, fenced = {}, false
+      for lnum, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+        if line:match "^%s*```" or line:match "^%s*~~~" then
+          fenced = not fenced
+        elseif not fenced then
+          local text = item_of_line(line)
+          if text then
+            text = (text:gsub("^~~(.-)~~$", "%1"))
+            local indent = buf_indent(buf, line)
+            while #stack > 0 and stack[#stack].indent >= indent do
+              table.remove(stack)
+            end
+            table.insert(stack, { indent = indent, raw = text })
+            local path = {}
+            for _, entry in ipairs(stack) do
+              table.insert(path, entry.raw)
+            end
+            table.insert(items, { buf = buf, lnum = lnum, path = path })
+          end
+        end
+      end
+    end
+  end
+  return items
+end
+
+local function suggest(ref, index)
+  local full_words = #vim.split(ref.candidates[1], "%s+")
+  local full_norm = norm(ref.candidates[1])
+  local want = {}
+  for k = 1, #ref.segments - 1 do
+    want[k] = norm(ref.segments[k])
+  end
+  local found, seen = {}, {}
+  for _, item in ipairs(index) do
+    local path = item.path
+    local leaf = path[#path]
+    local leaf_norm = norm(leaf)
+    if leaf_norm ~= "" then
+      local parents_match = #path - 1 >= #want
+      if parents_match then
+        for k = 1, #want do
+          if norm(path[#path - #want + k - 1]) ~= want[k] then
+            parents_match = false
+            break
+          end
+        end
+      end
+      local best = 0
+      for _, cand in ipairs(ref.candidates) do
+        local n = #vim.split(cand, "%s+")
+        local s = similarity(cand, leaf) * (0.5 + 0.5 * n / full_words)
+        if s > best then
+          best = s
+        end
+      end
+      local exact = full_norm == leaf_norm
+      local score = exact and 1 or best
+      if exact or (score >= 0.5 and (parents_match or score >= 0.8)) then
+        local reason
+        if exact and parents_match then
+          reason = "case or underscore mismatch"
+        elseif exact then
+          reason = "same item under a different path"
+        elseif parents_match then
+          reason = "similar item in the same parent"
+        else
+          reason = "similar item under a different path"
+        end
+        local parts = {}
+        for k = 1, #path - 1 do
+          table.insert(parts, (path[k]:gsub("%s+", "_")))
+        end
+        table.insert(parts, leaf)
+        local text = table.concat(parts, "::")
+        if not seen[text] then
+          seen[text] = true
+          table.insert(found, {
+            text = text,
+            reason = reason,
+            rank = score + (parents_match and 0.1 or 0),
+            leaf = leaf,
+          })
+        end
+      end
+    end
+  end
+  table.sort(found, function(a, b)
+    return a.rank > b.rank
+  end)
+  local limited = {}
+  for i = 1, math.min(#found, 5) do
+    limited[i] = found[i]
+  end
+  return limited
+end
+
+local function offer_fixes(buf, unresolved, rerun)
+  local index = build_index()
+  local choices = {}
+  for _, u in ipairs(unresolved) do
+    for _, s in ipairs(suggest(u.ref, index)) do
+      table.insert(choices, { u = u, s = s })
+    end
+  end
+  if #choices == 0 then
+    return
+  end
+  vim.ui.select(choices, {
+    prompt = "Fix unresolved references",
+    format_item = function(c)
+      return ("L%d  %s  ->  %s  (%s)"):format(c.u.lnum, c.u.text, c.s.text, c.s.reason)
+    end,
+  }, function(choice)
+    if not choice or not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+    local ref, lnum = choice.u.ref, choice.u.lnum
+    local line = vim.api.nvim_buf_get_lines(buf, lnum - 1, lnum, false)[1]
+    local words = vim.split(choice.s.leaf, "%s+")
+    local stop = ref.e
+    local used = {}
+    for _ = 2, #words do
+      local ws, we = line:find("^%s+%S+", stop + 1)
+      if not ws then
+        break
+      end
+      local tok = vim.trim(line:sub(ws, we))
+      local core = tok:match "^(.-)[%.,;:!%?%)]*$"
+      local a = norm(core)
+      local hit
+      for j, w in ipairs(words) do
+        local b = norm(w)
+        if not used[j] and (a == b or (#a >= 4 and #b >= 4 and lev(a, b) <= 1)) then
+          hit = j
+          break
+        end
+      end
+      if not hit then
+        break
+      end
+      used[hit] = true
+      stop = we - (#tok - #core)
+    end
+    vim.api.nvim_buf_set_text(buf, lnum - 1, ref.s - 1, lnum - 1, stop, { choice.s.text })
+    rerun()
+  end)
 end
 
 vim.api.nvim_set_hl(0, "UnresolvedRef", { undercurl = true, sp = "#a23a2b", fg = "#a23a2b" })
@@ -174,15 +408,17 @@ local function check_refs(first, last)
   vim.api.nvim_buf_clear_namespace(buf, ref_ns, 0, -1)
   local fenced = false
   local total, found = 0, 0
+  local unresolved = {}
   for lnum, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, last, false)) do
     if line:match "^%s*```" or line:match "^%s*~~~" then
       fenced = not fenced
     elseif not fenced and lnum >= first then
       for _, ref in ipairs(parse_refs(line)) do
         total = total + 1
-        if resolve_ref(ref.segments, true, ref.candidates) then
+        if resolve_ref(ref.segments, true, ref.candidates, true) then
           found = found + 1
         else
+          table.insert(unresolved, { lnum = lnum, ref = ref, text = line:sub(ref.s, ref.e) })
           vim.api.nvim_buf_set_extmark(buf, ref_ns, lnum - 1, ref.s - 1, {
             end_col = ref.e,
             hl_group = "UnresolvedRef",
@@ -202,6 +438,13 @@ local function check_refs(first, last)
     })
   end
   print(("[%d/%d]"):format(found, total))
+  if #unresolved > 0 then
+    vim.schedule(function()
+      offer_fixes(buf, unresolved, function()
+        check_refs(first, last)
+      end)
+    end)
+  end
 end
 
 vim.keymap.set("n", "<Leader>wcr", function()
